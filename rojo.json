@@ -1,0 +1,9 @@
+{
+  "name": "roto",
+  "partitions": {
+    "lib": {
+      "path": "lib",
+      "target": "ReplicatedStorage.Roto"
+    }
+  }
+}
