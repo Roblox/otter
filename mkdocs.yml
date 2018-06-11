@@ -1,0 +1,22 @@
+site_name: Roto Documentation
+site_url: https://roblox.github.io/roto/
+repo_name: Roblox/roto
+repo_url: https://github.com/Roblox/roto
+
+theme:
+  name: material
+  palette:
+    primary: 'Light Blue'
+    accent: 'Light Blue'
+
+pages:
+  - Home: index.md
+  - API Reference: api-reference.md
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.superfences
