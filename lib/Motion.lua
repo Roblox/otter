@@ -9,33 +9,45 @@ function Motion.new(options)
 
 	local kind = options.kind
 	local callback = options.callback
+	local onComplete = options.onComplete
 
 	assert(typeof(kind) == "table")
 	assert(typeof(callback) == "function")
+	assert(typeof(onComplete) == "function" or onComplete == nil)
 
 	local self = {
 		__kind = options.kind,
 		__callback = options.callback,
 		__connection = nil,
+		isComplete = false,
 	}
 
 	setmetatable(self, Motion)
 
 	self.__connection = RunService.RenderStepped:Connect(function(dt)
-		self.__kind:step(dt)
+		if self.isComplete then
+			return
+		end
+
+		self.isComplete = self.__kind:step(dt)
 		self.__callback(self.__kind:getValue())
+
+		if self.isComplete and onComplete ~= nil then
+			onComplete()
+		end
 	end)
 
 	return self
 end
 
 function Motion.prototype:setGoal(...)
+	self.isComplete = false
 	self.__kind:setGoal(...)
 end
 
-function Motion.prototype:destruct()
+function Motion.prototype:destroy()
 	if self.__connection == nil then
-		error("Motion has already been destructed!", 2)
+		error("Motion has already been destroyed!", 2)
 	end
 
 	self.__connection:Disconnect()
