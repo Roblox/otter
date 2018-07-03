@@ -14,6 +14,8 @@ local exp = math.exp
 local sin = math.sin
 local cos = math.cos
 local sqrt = math.sqrt
+local restingVelocityLimit = 1e-7
+local restingPositionLimit = 1e-5
 
 function Spring.new(options)
 	assert(typeof(options) == "table")
@@ -34,6 +36,8 @@ function Spring.new(options)
 		__goalPosition = position,
 		__position = position,
 		__velocity = 0,
+		__restingPositionLimit = restingPositionLimit,
+		__restingVelocityLimit = restingVelocityLimit,
 	}
 
 	setmetatable(self, Spring)
@@ -91,6 +95,8 @@ function Spring.prototype:step(dt)
 		self.__position = e1 + e2 + g
 		self.__velocity = r1*e1 + r2*e2
 	end
+	local positionOffset = math.abs(self.__position - self.__goalPosition)
+	return math.abs(self.__velocity) < self.__restingVelocityLimit and positionOffset < self.__restingPositionLimit
 end
 
 return Spring
