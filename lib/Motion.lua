@@ -20,24 +20,30 @@ function Motion.new(options)
 		__callback = options.callback,
 		__connection = nil,
 		isComplete = false,
+		onComplete = onComplete,
 	}
 
 	setmetatable(self, Motion)
 
 	self.__connection = RunService.RenderStepped:Connect(function(dt)
-		if self.isComplete then
-			return
-		end
-
-		self.isComplete = self.__kind:step(dt)
-		self.__callback(self.__kind:getValue())
-
-		if self.isComplete and onComplete ~= nil then
-			onComplete()
-		end
+		self:step(dt)
 	end)
 
 	return self
+end
+
+function Motion.prototype:step(dt)
+	if self.isComplete then
+		return self.isComplete
+	end
+
+	self.isComplete = self.__kind:step(dt)
+	self.__callback(self.__kind:getValue())
+
+	if self.isComplete and self.onComplete ~= nil then
+		self.onComplete()
+	end
+	return self.isComplete
 end
 
 function Motion.prototype:setGoal(...)
