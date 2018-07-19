@@ -1,7 +1,7 @@
-site_name: Roto Documentation
-site_url: https://roblox.github.io/roto/
-repo_name: Roblox/roto
-repo_url: https://github.com/Roblox/roto
+site_name: Otter Documentation
+site_url: https://roblox.github.io/otter/
+repo_name: Roblox/otter
+repo_url: https://github.com/Roblox/otter
 
 theme:
   name: material
