@@ -11,36 +11,8 @@ local LOAD_MODULES = {
 -- This makes sure we can load Lemur and other libraries that depend on init.lua
 package.path = package.path .. ";?/init.lua"
 
--- If this fails, make sure you've run `lua bin/install-dependencies.lua` first!
+-- If this fails, make sure you've cloned all Git submodules of this repo!
 local lemur = require("modules.lemur")
-
---[[
-	Collapses ModuleScripts named 'init' into their parent folders.
-
-	This is the same behavior as the collapsing mechanism from rbxpacker.
-]]
-local function collapse(root)
-	local init = root:FindFirstChild("init")
-	if init then
-		init.Name = root.Name
-		init.Parent = root.Parent
-
-		for _, child in ipairs(root:GetChildren()) do
-			child.Parent = init
-		end
-
-		root:Destroy()
-		root = init
-	end
-
-	for _, child in ipairs(root:GetChildren()) do
-		if child:IsA("Folder") then
-			collapse(child)
-		end
-	end
-
-	return root
-end
 
 -- Create a virtual Roblox tree
 local habitat = lemur.Habitat.new()
@@ -55,8 +27,6 @@ for _, module in ipairs(LOAD_MODULES) do
 	container.Name = module[2]
 	container.Parent = Root
 end
-
-collapse(Root)
 
 -- Load TestEZ and run our tests
 local TestEZ = habitat:require(Root.TestEZ)
