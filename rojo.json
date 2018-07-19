@@ -1,9 +1,9 @@
 {
-  "name": "roto",
+  "name": "otter",
   "partitions": {
     "lib": {
       "path": "lib",
-      "target": "ReplicatedStorage.Roto"
+      "target": "ReplicatedStorage.Otter"
     }
   }
 }

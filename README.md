@@ -1,13 +1,13 @@
-<h1 align="center">Roto</h1>
+<h1 align="center">Otter</h1>
 <div align="center">
 <!-- Coming soon!
-	<a href="https://travis-ci.org/Roblox/roto">
-		<img src="https://api.travis-ci.org/Roblox/roto.svg?branch=master" alt="Travis-CI Build Status" />
+	<a href="https://travis-ci.org/Roblox/otter">
+		<img src="https://api.travis-ci.org/Roblox/otter.svg?branch=master" alt="Travis-CI Build Status" />
 	</a>
-	<a href="https://coveralls.io/github/Roblox/roto?branch=master">
-		<img src="https://coveralls.io/repos/github/Roblox/roto/badge.svg?branch=master" alt="Coveralls Coverage" />
+	<a href="https://coveralls.io/github/Roblox/otter?branch=master">
+		<img src="https://coveralls.io/repos/github/Roblox/otter/badge.svg?branch=master" alt="Coveralls Coverage" />
 	</a>
-	<a href="https://roblox.github.io/roto">
+	<a href="https://roblox.github.io/otter">
 		<img src="https://img.shields.io/badge/docs-website-green.svg" alt="Documentation" />
 	</a>
 -->
@@ -23,14 +23,14 @@
 *In progress*
 
 ## Usage
-For each value that needs to be tweened, create a `Roto.Motion` object with a `kind` and `callback` parameter:
+For each value that needs to be tweened, create a `Otter.Motion` object with a `kind` and `callback` parameter:
 
 ```lua
 local object = Instance.new("Frame")
 object.Size = UDim2.new(0, 50, 0, 50)
 
-local motion = Roto.Motion.new({
-	kind = Roto.Spring.new({
+local motion = Otter.Motion.new({
+	kind = Otter.Spring.new({
 		dampingRatio = 1,
 		frequency = 1,
 		position = 0,
@@ -43,7 +43,7 @@ local motion = Roto.Motion.new({
 
 The `Motion` object is in charge of stepping the motion driver (passed via `kind`) every frame and notifying you of the new value of the motion.
 
-Right now, Roto only has the `Spring` driver, but in the future it could also include:
+Right now, Otter only has the `Spring` driver, but in the future it could also include:
 
 * `Instant`
 * `Linear`
@@ -58,7 +58,7 @@ getValue() -> number
 step(dt: number)
 ```
 
-Roto is *declarative*; just call `setGoal` to retarget an animation. In the case of springs, this preserves momentum, too:
+Otter is *declarative*; just call `setGoal` to retarget an animation. In the case of springs, this preserves momentum, too:
 
 ```lua
 motion:setGoal(100)
@@ -73,4 +73,4 @@ motion:destruct()
 ```
 
 ## License
-Roact is available under the Apache 2.0 license. See [LICENSE](LICENSE) for details.
+Otter is available under the Apache 2.0 license. See [LICENSE](LICENSE) for details.
