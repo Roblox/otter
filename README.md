@@ -14,7 +14,7 @@
 </div>
 
 <div align="center">
-	Declarative animation library for Roblox Lua using (but not limited to) springs.
+	Declarative animation library for Roblox Lua built around (but not limited to) springs.
 </div>
 
 <div>&nbsp;</div>
@@ -23,53 +23,67 @@
 *In progress*
 
 ## Usage
-For each value that needs to be tweened, create a `Otter.Motion` object with a `kind` and `callback` parameter:
+For each value that needs to be animated, create a motor object and subscribe to it.
+
+You can create a *single* motor:
 
 ```lua
 local object = Instance.new("Frame")
 object.Size = UDim2.new(0, 50, 0, 50)
 
-local motion = Otter.Motion.new({
-	kind = Otter.Spring.new({
-		dampingRatio = 1,
-		frequency = 1,
-		position = 0,
-	}),
-	callback = function(position)
-		object.Position = UDim2.new(0, position, 0, 0)
-	end,
+-- Our initial value is 0, we're moving to 50.
+local motor = Otter.createSingleMotor(0, Otter.spring(50))
+
+motor:subscribe(function(value)
+	object.Position = UDim2.new(0, position, 0, 0)
+end)
+
+motor:run()
+```
+
+Or you can create a *group* motor for transitioning multiple values:
+
+```lua
+local object = Instance.new("Frame")
+object.Size = UDim2.new(0, 50, 0, 50)
+
+-- Our initial value is { x = 0, y = 0 }.
+-- We're moving to { x = 50, y = 50 } with a spring on the X axis.
+local multimotor = Otter.createGroupMotor({
+	x = 0,
+	y = 0,
+}, {
+	x = Otter.spring(50),
+	y = Otter.instant(50),
+})
+
+multimotor:subscribe(function(position)
+	object.Position = UDim2.new(0, position.x, 0, position.y)
+end)
+
+multimotor:run()
+```
+
+The motor object is in charge of tracking all of the values involved in an animation. `Otter.spring` and `Otter.instant` are *goal* specifiers.
+
+We can update them:
+
+```lua
+-- Immediately move the motor to 100
+motor:setGoal(Otter.instant(100))
+
+-- Spring on both axes to 300
+multimotor:setGoal({
+	x = Otter.spring(300),
+	y = Otter.spring(300),
 })
 ```
 
-The `Motion` object is in charge of stepping the motion driver (passed via `kind`) every frame and notifying you of the new value of the motion.
-
-Right now, Otter only has the `Spring` driver, but in the future it could also include:
-
-* `Instant`
-* `Linear`
-* Time-based tween curves
-* Higher-order drivers for looping or inverting
-
-Any object that satifies the correct interface can be used as a motion driver:
-
-```
-setGoal(...any)
-getValue() -> number
-step(dt: number)
-```
-
-Otter is *declarative*; just call `setGoal` to retarget an animation. In the case of springs, this preserves momentum, too:
+When you're done, destructing a motor object will stop it:
 
 ```lua
-motion:setGoal(100)
-wait(0.5)
-motion:setGoal(400)
-```
-
-When you're done, destructing the `Motion` object will stop it:
-
-```lua
-motion:destruct()
+motor:destruct()
+multimotor:destruct()
 ```
 
 ## License

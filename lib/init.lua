@@ -1,9 +1,6 @@
-local Motion = require(script.Motion)
-local Spring = require(script.Spring)
-
-local Roto = {
-	Motion = Motion,
-	Spring = Spring,
+return {
+	createGroupMotor = require(script.createGroupMotor),
+	createSingleMotor = require(script.createSingleMotor),
+	spring = require(script.spring),
+	instant = require(script.instant),
 }
-
-return Roto

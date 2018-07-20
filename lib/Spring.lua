@@ -5,60 +5,22 @@
 	https://gist.github.com/Fraktality/1033625223e13c01aa7144abe4aaf54d
 ]]
 
-local Spring = {}
-Spring.prototype = {}
-Spring.__index = Spring.prototype
-
 local pi = math.pi
 local exp = math.exp
 local sin = math.sin
 local cos = math.cos
 local sqrt = math.sqrt
-local restingVelocityLimit = 1e-7
-local restingPositionLimit = 1e-5
 
-function Spring.new(options)
-	assert(typeof(options) == "table")
+local RESTING_VELOCITY_LIMIT = 1e-7
+local RESTING_POSITION_LIMIT = 1e-5
 
-	local dampingRatio = options.dampingRatio
-	local frequency = options.frequency
-	local position = options.position
-
-	assert(typeof(dampingRatio) == "number")
-	assert(typeof(frequency) == "number")
-	assert(typeof(position) == "number")
-
-	assert(dampingRatio * frequency >= 0, "Expected dampingRatio * frequency >= 0")
-
-	local self = {
-		__dampingRatio = dampingRatio,
-		__frequency = frequency, -- nominal frequency
-		__goalPosition = position,
-		__position = position,
-		__velocity = 0,
-		__restingPositionLimit = restingPositionLimit,
-		__restingVelocityLimit = restingVelocityLimit,
-	}
-
-	setmetatable(self, Spring)
-
-	return self
-end
-
-function Spring.prototype:setGoal(goalPosition)
-	self.__goalPosition = goalPosition
-end
-
-function Spring.prototype:getValue()
-	return self.__position
-end
-
-function Spring.prototype:step(dt)
+local function step(self, state, dt)
 	local d = self.__dampingRatio
 	local f = self.__frequency * 2 * pi
 	local g = self.__goalPosition
-	local p = self.__position
-	local v = self.__velocity
+
+	local p = state.value
+	local v = state.velocity or 0
 
 	local offset = p - g
 	local decay = exp(-dt*d*f)
@@ -70,16 +32,16 @@ function Spring.prototype:step(dt)
 	-- Solve for x[dt], x'[dt]
 
 	if d == 1 then -- critically damped
-		self.__position = (v*dt + offset*(f*dt + 1))*decay + g
-		self.__velocity = (v - f*dt*(offset*f + v))*decay
+		p = (v*dt + offset*(f*dt + 1))*decay + g
+		v = (v - f*dt*(offset*f + v))*decay
 	elseif d < 1 then -- underdamped
 		local c = sqrt(1 - d^2)
 
 		local i = cos(f*c*dt)
 		local j = sin(f*c*dt)
 
-		self.__position = (i*offset + j*(v + d*f*offset)/(f*c))*decay + g
-		self.__velocity = (i*c*v - j*(v*d + f*offset))*decay/c
+		p = (i*offset + j*(v + d*f*offset)/(f*c))*decay + g
+		v = (i*c*v - j*(v*d + f*offset))*decay/c
 	elseif d > 1 then -- overdamped
 		local c = sqrt(d*d - 1)
 
@@ -92,11 +54,41 @@ function Spring.prototype:step(dt)
 		local e1 = co1*exp(r1*dt)
 		local e2 = co2*exp(r2*dt)
 
-		self.__position = e1 + e2 + g
-		self.__velocity = r1*e1 + r2*e2
+		p = e1 + e2 + g
+		v = r1*e1 + r2*e2
 	end
-	local positionOffset = math.abs(self.__position - self.__goalPosition)
-	return math.abs(self.__velocity) < self.__restingVelocityLimit and positionOffset < self.__restingPositionLimit
+
+	local positionOffset = math.abs(p - self.__goalPosition)
+	local velocityOffset = math.abs(state.velocity)
+
+	local complete = velocityOffset < RESTING_VELOCITY_LIMIT and positionOffset < RESTING_POSITION_LIMIT
+
+	return {
+		value = p,
+		complete = complete,
+
+		velocity = v,
+	}
 end
 
-return Spring
+local function spring(goalPosition, dampingRatio, frequency)
+	dampingRatio = dampingRatio or 1
+	frequency = frequency or 1
+
+	assert(typeof(goalPosition) == "number")
+	assert(typeof(dampingRatio) == "number")
+	assert(typeof(frequency) == "number")
+
+	assert(dampingRatio * frequency >= 0, "Expected dampingRatio * frequency >= 0")
+
+	local self = {
+		__dampingRatio = dampingRatio,
+		__frequency = frequency, -- nominal frequency
+		__goalPosition = goalPosition,
+		step = step,
+	}
+
+	return self
+end
+
+return spring
