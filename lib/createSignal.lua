@@ -1,4 +1,4 @@
-local function setAdd(set, addValue)
+local function addToSet(set, addValue)
 	local new = {}
 
 	for value in pairs(set) do
@@ -10,7 +10,7 @@ local function setAdd(set, addValue)
 	return new
 end
 
-local function setRemove(set, removeValue)
+local function removeFromSet(set, removeValue)
 	local new = {}
 
 	for value in pairs(set) do
@@ -26,11 +26,13 @@ local function createSignal()
 	local subscribers = {}
 
 	local function subscribe(subscriber)
-		subscribers = setAdd(subscribers, subscriber)
+		subscribers = addToSet(subscribers, subscriber)
 
-		return function()
-			subscribers = setRemove(subscribers, subscriber)
+		local function disconnect()
+			subscribers = removeFromSet(subscribers, subscriber)
 		end
+
+		return disconnect
 	end
 
 	local function fire(...)
