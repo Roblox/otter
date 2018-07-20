@@ -5,6 +5,8 @@
 	https://gist.github.com/Fraktality/1033625223e13c01aa7144abe4aaf54d
 ]]
 
+local merge = require(script.Parent.merge)
+
 local pi = math.pi
 local exp = math.exp
 local sin = math.sin
@@ -71,11 +73,22 @@ local function step(self, state, dt)
 	}
 end
 
-local function spring(goalPosition, dampingRatio, frequency)
-	dampingRatio = dampingRatio or 1
-	frequency = frequency or 1
-
+local function spring(goalPosition, inputOptions)
 	assert(typeof(goalPosition) == "number")
+
+	local options = {
+		dampingRatio = 1,
+		frequency = 1,
+	}
+
+	if inputOptions ~= nil then
+		assert(typeof(inputOptions) == "table")
+		merge(options, inputOptions)
+	end
+
+	local dampingRatio = options.dampingRatio
+	local frequency = options.frequency
+
 	assert(typeof(dampingRatio) == "number")
 	assert(typeof(frequency) == "number")
 

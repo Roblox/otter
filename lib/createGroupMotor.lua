@@ -1,6 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local join = require(script.Parent.join)
+local merge = require(script.Parent.merge)
 local createSignal = require(script.Parent.createSignal)
 
 local GroupMotor = {}
@@ -90,7 +90,7 @@ end
 function GroupMotor.prototype:setGoal(goals)
 	assert(typeof(goals) == "table")
 
-	self.__goals = join(self.__goals, goals)
+	self.__goals = merge({}, self.__goals, goals)
 
 	for key in pairs(goals) do
 		self.__states[key].complete = false

@@ -1,15 +1,13 @@
-local function join(...)
-	local result = {}
-
+local function join(target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 
 		for key, value in pairs(source) do
-			result[key] = value
+			target[key] = value
 		end
 	end
 
-	return result
+	return target
 end
 
 return join
