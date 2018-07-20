@@ -25,7 +25,7 @@
 ## Usage
 For each value that needs to be animated, create a motor object and subscribe to it.
 
-You can create a *single* motor:
+You can create a *single* motor to track a single value:
 
 ```lua
 local object = Instance.new("Frame")
@@ -35,7 +35,7 @@ object.Size = UDim2.new(0, 50, 0, 50)
 local motor = Otter.createSingleMotor(0, Otter.spring(50))
 
 motor:subscribe(function(value)
-	object.Position = UDim2.new(0, position, 0, 0)
+	object.Position = UDim2.new(0, value, 0, 0)
 end)
 
 -- Once started, our motor will run every frame until it reaches its goal.
