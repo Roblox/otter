@@ -58,20 +58,20 @@ local multimotor = Otter.createGroupMotor({
 	y = Otter.instant(50),
 })
 
-multimotor:subscribe(function(position)
-	object.Position = UDim2.new(0, position.x, 0, position.y)
+multimotor:subscribe(function(values)
+	object.Position = UDim2.new(0, values.x, 0, values.y)
 end)
 
--- Start your engines!
+-- Start your engine!
 multimotor:start()
 ```
 
-The motor object is in charge of tracking all of the values involved in an animation. `Otter.spring` and `Otter.instant` are *goal* specifiers.
+The motor object is in charge of tracking all of the values involved in an animation. `Otter.spring` and `Otter.instant` are called *goal* specifiers. They describe what value we're trying to animate to and how to get there.
 
-We can update them:
+We can update our goals whenever and Otter will continue our animation:
 
 ```lua
--- Immediately move the motor to 100
+-- Immediately move the motor's value to 100
 motor:setGoal(Otter.instant(100))
 
 -- Spring on both axes to 300
