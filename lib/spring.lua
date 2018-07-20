@@ -59,7 +59,7 @@ local function step(self, state, dt)
 	end
 
 	local positionOffset = math.abs(p - self.__goalPosition)
-	local velocityOffset = math.abs(state.velocity)
+	local velocityOffset = math.abs(v)
 
 	local complete = velocityOffset < RESTING_VELOCITY_LIMIT and positionOffset < RESTING_POSITION_LIMIT
 

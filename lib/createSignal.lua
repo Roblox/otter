@@ -25,7 +25,7 @@ end
 local function createSignal()
 	local subscribers = {}
 
-	local function subscribe(subscriber)
+	local function subscribe(self, subscriber)
 		subscribers = addToSet(subscribers, subscriber)
 
 		local function disconnect()
@@ -35,7 +35,7 @@ local function createSignal()
 		return disconnect
 	end
 
-	local function fire(...)
+	local function fire(self, ...)
 		for subscriber in pairs(subscribers) do
 			subscriber(...)
 		end

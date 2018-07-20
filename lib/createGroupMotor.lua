@@ -22,7 +22,7 @@ local function createGroupMotor(initialValues, goals)
 		end
 
 		states[key] = {
-			position = initialValue,
+			value = initialValue,
 			complete = false,
 		}
 	end
@@ -59,15 +59,18 @@ function GroupMotor.prototype:step(dt)
 	assert(typeof(dt) == "number")
 
 	local allComplete = true
+	local values = {}
 
 	for key, goal in pairs(self.__goals) do
-		local oldState = self.__states[key]
+		local state = self.__states[key]
 
-		if not oldState.complete then
-			local newState = goal:step(oldState, dt)
+		if not state.complete then
+			local newState = goal:step(state, dt)
 
 			if newState == nil then
-				newState = oldState
+				newState = state
+			else
+				state = newState
 			end
 
 			if not newState.complete then
@@ -76,10 +79,12 @@ function GroupMotor.prototype:step(dt)
 
 			self.__states[key] = newState
 		end
+
+		values[key] = state.value
 	end
 
 	self.__allComplete = allComplete
-	self.__signal:fire(self.__states)
+	self.__signal:fire(values)
 end
 
 function GroupMotor.prototype:setGoal(goals)
