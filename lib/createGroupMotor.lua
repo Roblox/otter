@@ -8,6 +8,9 @@ GroupMotor.prototype = {}
 GroupMotor.__index = GroupMotor.prototype
 
 local function createGroupMotor(initialValues, goals)
+	assert(typeof(initialValues) == "table")
+	assert(typeof(goals) == "table")
+
 	local states = {}
 
 	for key in pairs(goals) do
@@ -31,7 +34,7 @@ local function createGroupMotor(initialValues, goals)
 		__signal = createSignal(),
 	}
 
-	setmetatable(self, GroupMotor.prototype)
+	setmetatable(self, GroupMotor)
 
 	return self
 end
@@ -53,11 +56,19 @@ function GroupMotor.prototype:stop()
 end
 
 function GroupMotor.prototype:step(dt)
+	assert(typeof(dt) == "number")
+
 	local allComplete = true
 
 	for key, goal in pairs(self.__goals) do
-		if not self.__states[key].complete then
-			local newState = goal:step(self.__states[key], dt)
+		local oldState = self.__states[key]
+
+		if not oldState.complete then
+			local newState = goal:step(oldState, dt)
+
+			if newState == nil then
+				newState = oldState
+			end
 
 			if not newState.complete then
 				allComplete = false
@@ -72,6 +83,8 @@ function GroupMotor.prototype:step(dt)
 end
 
 function GroupMotor.prototype:setGoal(goals)
+	assert(typeof(goals) == "table")
+
 	self.__goals = join(self.__goals, goals)
 
 	for key in pairs(goals) do
@@ -81,6 +94,8 @@ function GroupMotor.prototype:setGoal(goals)
 end
 
 function GroupMotor.prototype:subscribe(callback)
+	assert(typeof(callback) == "function")
+
 	self.__signal:subscribe(callback)
 end
 
