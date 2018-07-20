@@ -38,7 +38,8 @@ motor:subscribe(function(value)
 	object.Position = UDim2.new(0, position, 0, 0)
 end)
 
-motor:run()
+-- Once started, our motor will run every frame until it reaches its goal.
+motor:start()
 ```
 
 Or you can create a *group* motor for transitioning multiple values:
@@ -61,7 +62,8 @@ multimotor:subscribe(function(position)
 	object.Position = UDim2.new(0, position.x, 0, position.y)
 end)
 
-multimotor:run()
+-- Start your engines!
+multimotor:start()
 ```
 
 The motor object is in charge of tracking all of the values involved in an animation. `Otter.spring` and `Otter.instant` are *goal* specifiers.
@@ -79,7 +81,17 @@ multimotor:setGoal({
 })
 ```
 
-When you're done, destructing a motor object will stop it:
+At any time, we can stop our motor, and even step it manually. This can be useful for tests!
+
+```lua
+motor:stop()
+
+motor:step(0.5)
+
+motor:start()
+```
+
+When you're done, destructing a motor object will tear everything down and stop it:
 
 ```lua
 motor:destruct()

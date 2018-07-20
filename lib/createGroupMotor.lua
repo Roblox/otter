@@ -39,7 +39,7 @@ local function createGroupMotor(initialValues, goals)
 	return self
 end
 
-function GroupMotor.prototype:run()
+function GroupMotor.prototype:start()
 	self.__connection = RunService.RenderStepped:Connect(function(dt)
 		if self.__allComplete then
 			return

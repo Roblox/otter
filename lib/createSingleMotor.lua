@@ -21,7 +21,7 @@ local function createSingleMotor(initialValue, goal)
 	return self
 end
 
-function SingleMotor.prototype:run()
+function SingleMotor.prototype:start()
 	self.__connection = RunService.RenderStepped:Connect(function(dt)
 		if self.__state.complete then
 			return
