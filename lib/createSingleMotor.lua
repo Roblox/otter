@@ -16,7 +16,7 @@ local function createSingleMotor(initialValue, goal)
 		__signal = createSignal(),
 	}
 
-	setmetatable(self, SingleMotor.prototype)
+	setmetatable(self, SingleMotor)
 
 	return self
 end
@@ -38,7 +38,11 @@ function SingleMotor.prototype:stop()
 end
 
 function SingleMotor.prototype:step(dt)
-	self.__state = self.__goal:step(self.__state, dt)
+	local newState = self.__goal:step(self.__state, dt)
+
+	if newState ~= nil then
+		self.__state = newState
+	end
 
 	self.__signal:fire(self.__state.value)
 end
