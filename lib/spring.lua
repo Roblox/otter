@@ -8,6 +8,7 @@
 local merge = require(script.Parent.merge)
 
 local pi = math.pi
+local abs = math.abs
 local exp = math.exp
 local sin = math.sin
 local cos = math.cos
@@ -17,59 +18,85 @@ local RESTING_VELOCITY_LIMIT = 1e-7
 local RESTING_POSITION_LIMIT = 1e-5
 
 local function step(self, state, dt)
+	-- Advance the spring simulation by dt seconds.
+	-- Take the damped harmonic oscillator ODE:
+	--    f^2*(X[t] - g) + 2*d*f*X'[t] + X''[t] = 0
+	-- Where X[t] is position at time t, g is desired position, f is angular frequency, and d is damping ratio.
+	-- Apply constant initial conditions:
+	--    X[0] = p0
+	--    X'[0] = v0
+	-- Solve the IVP to get analytic expressions for X[t] and X'[t].
+	-- The solution takes on one of three forms for d=1, d<1, and d>1
+
 	local d = self.__dampingRatio
-	local f = self.__frequency * 2 * pi
+	local f = self.__frequency * 2 * pi -- Rad/s
 	local g = self.__goalPosition
 
-	local p = state.value
-	local v = state.velocity or 0
+	local p0 = state.value
+	local v0 = state.velocity or 0
 
-	local offset = p - g
+	local offset = p0 - g
 	local decay = exp(-dt*d*f)
 
-	-- Given:
-	--   f^2*(x[dt] - g) + 2*d*f*x'[dt] + x''[dt] = 0,
-	--   x[0] = p,
-	--   x'[0] = v
-	-- Solve for x[dt], x'[dt]
+	local p1, v1
 
-	if d == 1 then -- critically damped
-		p = (v*dt + offset*(f*dt + 1))*decay + g
-		v = (v - f*dt*(offset*f + v))*decay
-	elseif d < 1 then -- underdamped
-		local c = sqrt(1 - d^2)
+	if d == 1 then -- Critically damped
+		p1 = (v0*dt + offset*(f*dt + 1))*decay + g
+		v1 = (v0 - f*dt*(offset*f + v0))*decay
+
+	elseif d < 1 then -- Underdamped
+		local c = sqrt(1 - d*d)
 
 		local i = cos(f*c*dt)
 		local j = sin(f*c*dt)
 
-		p = (i*offset + j*(v + d*f*offset)/(f*c))*decay + g
-		v = (i*c*v - j*(v*d + f*offset))*decay/c
-	elseif d > 1 then -- overdamped
+		-- Problem: Damping ratios close to 1 can cause numerical instability.
+		-- Solution: Rearrange to group terms involving j/c, then find an approximation z for j/c.
+		--    z = sin(dt*f*c)/c
+		-- Substitute a for dt*f
+		--    z = sin(a*c)/c
+		-- Take the 5th-order series expansion of z at c = 0
+		--    z = a - (a^3*c^2)/6 + (a^5*c^4)/120 + O(c^6)
+		--    z ≈ a - (a^3*c^2)/6 + (a^5*c^4)/120
+		-- Rewrite in Horner form to mitigate precision issues
+		--    z ≈ a + ((a*a)*(c*c)*(c*c)/20 - c*c)*(a*a*a)/6
+
+		local z
+		if c > 1e-4 then
+			z = j/c
+		else
+			local a = dt*f
+			z = a + ((a*a)*(c*c)*(c*c)/20 - c*c)*(a*a*a)/6
+		end
+
+		p1 = (offset*(i + d*z) + v0*z/f)*decay + g
+		v1 = v0*(i - z*d) + offset*(z*f)
+
+	else -- Overdamped
 		local c = sqrt(d*d - 1)
 
 		local r1 = -f*(d - c)
 		local r2 = -f*(d + c)
 
-		local co2 = (v - r1*offset)/(2*f*c)
+		local co2 = (v0 - r1*offset)/(2*f*c)
 		local co1 = offset - co2
 
 		local e1 = co1*exp(r1*dt)
 		local e2 = co2*exp(r2*dt)
 
-		p = e1 + e2 + g
-		v = r1*e1 + r2*e2
+		p1 = e1 + e2 + g
+		v1 = r1*e1 + r2*e2
 	end
 
-	local positionOffset = math.abs(p - self.__goalPosition)
-	local velocityOffset = math.abs(v)
+	local positionOffset = abs(p1 - self.__goalPosition)
+	local velocityOffset = abs(v1)
 
 	local complete = velocityOffset < RESTING_VELOCITY_LIMIT and positionOffset < RESTING_POSITION_LIMIT
 
 	return {
-		value = p,
+		value = p1,
+		velocity = v1,
 		complete = complete,
-
-		velocity = v,
 	}
 end
 
@@ -96,7 +123,7 @@ local function spring(goalPosition, inputOptions)
 
 	local self = {
 		__dampingRatio = dampingRatio,
-		__frequency = frequency, -- nominal frequency
+		__frequency = frequency, -- Hz
 		__goalPosition = goalPosition,
 		step = step,
 	}
