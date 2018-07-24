@@ -68,8 +68,17 @@ local function step(self, state, dt)
 			local a = dt*f
 			z = a + ((a*a)*(c*c)*(c*c)/20 - c*c)*(a*a*a)/6
 		end
-
-		p1 = (offset*(i + d*z) + v0*z/f)*decay + g
+		
+		-- Repeat the process with a->dt and c->b=f*c for the f->0 case
+		local y
+		if f*c > 1e-4 then
+			y = j/(f*c)
+		else
+			local b = f*c
+			y = dt + ((dt*dt)*(b*b)*(b*b)/20 - b*b)*(dt*dt*dt)/6
+		end
+		
+		p1 = (offset*(i + d*z) + v0*y)*decay + g
 		v1 = v0*(i - z*d) + offset*(z*f)
 
 	else -- Overdamped
