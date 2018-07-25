@@ -51,7 +51,7 @@ end
 
 function GroupMotor.prototype:stop()
 	if self.__connection ~= nil then
-		self.__connection:Destroy()
+		self.__connection:Disconnect()
 	end
 end
 
