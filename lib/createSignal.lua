@@ -1,21 +1,21 @@
-local function addToSet(set, addValue)
+local function addToMap(map, addKey, addValue)
 	local new = {}
 
-	for value in pairs(set) do
-		new[value] = true
+	for key, value in pairs(map) do
+		new[key] = value
 	end
 
-	new[addValue] = true
+	new[addKey] = addValue
 
 	return new
 end
 
-local function removeFromSet(set, removeValue)
+local function removeFromMap(map, removeKey)
 	local new = {}
 
-	for value in pairs(set) do
-		if value ~= removeValue then
-			new[value] = true
+	for key, value in pairs(map) do
+		if key ~= removeKey then
+			new[key] = value
 		end
 	end
 
@@ -23,21 +23,32 @@ local function removeFromSet(set, removeValue)
 end
 
 local function createSignal()
-	local subscribers = {}
+	local connections = {}
 
-	local function subscribe(self, subscriber)
-		subscribers = addToSet(subscribers, subscriber)
+	local function subscribe(self, callback)
+		assert(typeof(callback) == "function", "Can only subscribe to signals with a function.")
+
+		local connection = {
+			callback = callback,
+		}
+
+		connections = addToMap(connections, callback, connection)
 
 		local function disconnect()
-			subscribers = removeFromSet(subscribers, subscriber)
+			assert(not connection.disconnected, "Listeners can only be disconnected once.")
+
+			connection.disconnected = true
+			connections = removeFromMap(connections, callback)
 		end
 
 		return disconnect
 	end
 
 	local function fire(self, ...)
-		for subscriber in pairs(subscribers) do
-			subscriber(...)
+		for callback, connection in pairs(connections) do
+			if not connection.disconnected then
+				callback(...)
+			end
 		end
 	end
 
