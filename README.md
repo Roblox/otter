@@ -94,8 +94,8 @@ motor:start()
 When you're done, destructing a motor object will tear everything down and stop it:
 
 ```lua
-motor:destruct()
-multimotor:destruct()
+motor:destroy()
+multimotor:destroy()
 ```
 
 ## License
