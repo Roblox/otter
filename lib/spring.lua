@@ -79,7 +79,7 @@ local function step(self, state, dt)
 		end
 		
 		p1 = (offset*(i + d*z) + v0*y)*decay + g
-		v1 = v0*(i - z*d) + offset*(z*f)
+		v1 = (v0*(i - z*d) - offset*(z*f))*decay
 
 	else -- Overdamped
 		local c = sqrt(d*d - 1)
