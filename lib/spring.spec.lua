@@ -1,178 +1,173 @@
+local positionLimit = 1e-5
+local velocityLimit = 1e-7
+
 return function()
-	local Spring = require(script.Parent).Spring
+	local spring = require(script.Parent.spring)
 
 	it("should have all expected APIs", function()
-		local spring = Spring.new({
-			dampingRatio = 1,
-			frequency = 0.5,
-			position = 1,
+		expect(spring).to.be.a("function")
+
+		local s = spring(1, {
+			dampingRatio = 0.1,
+			frequency = 10,
 		})
-		expect(spring).to.be.a("table")
-		expect(Spring.new).to.be.a("function")
-		expect(spring.setGoal).to.be.a("function")
-		expect(spring.getValue).to.be.a("function")
-		expect(spring.step).to.be.a("function")
+
+		expect(s).to.be.a("table")
+		expect(s.step).to.be.a("function")
+
+		-- handle when spring lacks option table
+		local s = spring(1)
 	end)
 
-	it("should throw exceptions when passed bad args", function()
-		expect(function()
-			Spring.new()
-		end).to.throw()
-		expect(function()
-			Spring.new({})
-		end).to.throw()
-
-		expect(function()
-			Spring.new({
-				dampingRatio = {},
-				frequency = 0.5,
-				position = 1,
-			})
-		end).to.throw()
-
-		expect(function()
-			Spring.new({
-				dampingRatio = 1,
-				frequency = {},
-				position = 1,
-			})
-		end).to.throw()
-
-		expect(function()
-			Spring.new({
-				dampingRatio = 1,
-				frequency = 0.5,
-				position = {},
-			})
-		end).to.throw()
-
-		expect(function()
-			Spring.new({
-				dampingRatio = -1,
-				frequency = 0.5,
-				position = 1,
-			})
-		end).to.throw()
-
-		Spring.new({
-			dampingRatio = 1,
-			frequency = 0.5,
-			position = 1,
+	it("should handle being still correctly", function()
+		local s = spring(1, {
+			dampingRatio = 0.1,
+			frequency = 10,
 		})
-	end)
 
-	it("should remember its position", function()
-		local spring = Spring.new({
-			dampingRatio = 1,
-			frequency = 0.5,
-			position = 1,
-		})
-		expect(spring:getValue()).to.equal(1)
-	end)
+		local state = s:step({
+			value = 1,
+			velocity = 0,
+			complete = false,
+		}, 1)
 
-	it("should return complete when done", function()
-		local spring = Spring.new({
-			dampingRatio = 1,
-			frequency = 0.5,
-			position = 1,
-		})
-		expect(spring:step(0.5)).to.equal(true)
+		expect(state.value).to.equal(1)
+		expect(state.velocity).to.equal(0)
+		expect(state.complete).to.equal(true)
 	end)
 
 	it("should return not complete when in motion", function()
-		local spring = Spring.new({
-			dampingRatio = 1,
-			frequency = 0.5,
-			position = 1,
+		local s = spring(100, {
+			dampingRatio = 0.1,
+			frequency = 10,
 		})
-		spring:setGoal(100)
-		expect(spring:step(0.5)).to.equal(false)
+
+		local state = s:step({
+			value = 1,
+			velocity = 0,
+			complete = false,
+		}, 1)
+
+		expect(state.value > 1).to.equal(true)
+		expect(math.abs(state.velocity) > 0).to.equal(true)
+		expect(state.complete).to.equal(false)
 	end)
 
 	describe("should eventaully complete when", function()
-		local positionLimit = 1e-5
-		it("spring is critically damped", function()
-			local spring = Spring.new({
+		it("is critically damped", function()
+			local s = spring(3, {
 				dampingRatio = 1,
 				frequency = 0.5,
-				position = 1,
-				__restingPositionLimit = positionLimit,
 			})
-			spring:setGoal(3)
 
-			while not spring:step(0.5) do
+			local state = {
+				value = 1,
+				velocity = 0,
+				complete = false,
+			}
+
+			while not state.complete do
+				state = s:step(state, 0.5)
 			end
 
-			expect(math.abs(spring:getValue() - 3) < positionLimit).to.equal(true)
+			expect(state.complete).to.equal(true)
+			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
+			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 		end)
 
-		it("spring is over damped", function()
-			local spring = Spring.new({
+		it("is over damped", function()
+			local s = spring(3, {
 				dampingRatio = 10,
 				frequency = 0.5,
-				position = 1,
-				__restingPositionLimit = positionLimit,
 			})
-			spring:setGoal(3)
 
-			while not spring:step(0.5) do
+			local state = {
+				value = 1,
+				velocity = 0,
+				complete = false,
+			}
+
+			while not state.complete do
+				state = s:step(state, 0.5)
 			end
 
-			expect(math.abs(spring:getValue() - 3) < positionLimit).to.equal(true)
+			expect(state.complete).to.equal(true)
+			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
+			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 		end)
 
-		it("spring is under damped", function()
-			local spring = Spring.new({
+		it("is under damped", function()
+			local s = spring(3, {
 				dampingRatio = 0.1,
 				frequency = 0.5,
-				position = 1,
-				__restingPositionLimit = positionLimit,
 			})
-			spring:setGoal(3)
 
-			while not spring:step(0.5) do
+			local state = {
+				value = 1,
+				velocity = 0,
+				complete = false,
+			}
+
+			while not state.complete do
+				state = s:step(state, 0.5)
 			end
 
-			expect(math.abs(spring:getValue() - 3) < positionLimit).to.equal(true)
+			expect(state.complete).to.equal(true)
+			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
+			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 		end)
 
-		it("spring changes goal mid motion", function()
-			local spring = Spring.new({
+		it("changes goal mid motion", function()
+			local s = spring(3, {
 				dampingRatio = 0.1,
 				frequency = 0.5,
-				position = 1,
-				__restingPositionLimit = positionLimit,
 			})
-			spring:setGoal(3)
-			spring:step(10)
-			spring:setGoal(1)
 
-			while not spring:step(0.5) do
+			local state = {
+				value = 1,
+				velocity = 0,
+				complete = false,
+			}
+
+			state = s:step(state, 5)
+
+			expect(state.complete).to.equal(false)
+
+			s = spring(0, {
+				dampingRatio = 0.1,
+				frequency = 0.5,
+			})
+
+			while not state.complete do
+				state = s:step(state, 0.5)
 			end
 
-			expect(math.abs(spring:getValue() - 1) < positionLimit).to.equal(true)
+			expect(state.complete).to.equal(true)
+			expect(math.abs(state.value) < positionLimit).to.equal(true)
+			print(tostring(state.velocity))
+			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 		end)
 	end)
 
-	it("should be able to restart motion after completion", function()
-		local positionLimit = 1e-5
-		local spring = Spring.new({
-			dampingRatio = 1,
-			frequency = 0.5,
-			position = 1,
-			__restingPositionLimit = positionLimit,
-		})
-		spring:setGoal(3)
+	it("should remain complete when completed", function()
+			local s = spring(3, {
+				dampingRatio = 1,
+				frequency = 0.5,
+			})
 
-		while not spring:step(0.5) do
-		end
+			local state = {
+				value = 1,
+				velocity = 0,
+				complete = false,
+			}
 
-		expect(math.abs(spring:getValue() - 3) < positionLimit).to.equal(true)
-		spring:setGoal(1)
+			while not state.complete do
+				state = s:step(state, 0.5)
+			end
+			state = s:step(state, 0.5)
 
-		while not spring:step(0.5) do
-		end
-
-		expect(math.abs(spring:getValue() - 1) < positionLimit).to.equal(true)
+			expect(state.complete).to.equal(true)
+			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
+			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 	end)
 end
