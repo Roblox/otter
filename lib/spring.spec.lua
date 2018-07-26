@@ -16,7 +16,10 @@ return function()
 		expect(s.step).to.be.a("function")
 
 		-- handle when spring lacks option table
-		local s = spring(1)
+		s = spring(1)
+
+		expect(s).to.be.a("table")
+		expect(s.step).to.be.a("function")
 	end)
 
 	it("should handle being still correctly", function()
@@ -116,58 +119,27 @@ return function()
 			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
 			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 		end)
-
-		it("changes goal mid motion", function()
-			local s = spring(3, {
-				dampingRatio = 0.1,
-				frequency = 0.5,
-			})
-
-			local state = {
-				value = 1,
-				velocity = 0,
-				complete = false,
-			}
-
-			state = s:step(state, 5)
-
-			expect(state.complete).to.equal(false)
-
-			s = spring(0, {
-				dampingRatio = 0.1,
-				frequency = 0.5,
-			})
-
-			while not state.complete do
-				state = s:step(state, 0.5)
-			end
-
-			expect(state.complete).to.equal(true)
-			expect(math.abs(state.value) < positionLimit).to.equal(true)
-			print(tostring(state.velocity))
-			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
-		end)
 	end)
 
 	it("should remain complete when completed", function()
-			local s = spring(3, {
-				dampingRatio = 1,
-				frequency = 0.5,
-			})
+		local s = spring(3, {
+			dampingRatio = 1,
+			frequency = 0.5,
+		})
 
-			local state = {
-				value = 1,
-				velocity = 0,
-				complete = false,
-			}
+		local state = {
+			value = 1,
+			velocity = 0,
+			complete = false,
+		}
 
-			while not state.complete do
-				state = s:step(state, 0.5)
-			end
+		while not state.complete do
 			state = s:step(state, 0.5)
+		end
+		state = s:step(state, 0.5)
 
-			expect(state.complete).to.equal(true)
-			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
-			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
+		expect(state.complete).to.equal(true)
+		expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
+		expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
 	end)
 end
