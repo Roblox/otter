@@ -31,7 +31,8 @@ local function createGroupMotor(initialValues, goals)
 		__goals = goals,
 		__states = states,
 		__allComplete = false,
-		__signal = createSignal(),
+		__onComplete = createSignal(),
+		__onStep = createSignal(),
 	}
 
 	setmetatable(self, GroupMotor)
@@ -84,7 +85,12 @@ function GroupMotor.prototype:step(dt)
 	end
 
 	self.__allComplete = allComplete
-	self.__signal:fire(values)
+
+	self.__onStep:fire(values)
+
+	if allComplete then
+		self.__onComplete:fire(values)
+	end
 end
 
 function GroupMotor.prototype:setGoal(goals)
@@ -101,7 +107,13 @@ end
 function GroupMotor.prototype:subscribe(callback)
 	assert(typeof(callback) == "function")
 
-	self.__signal:subscribe(callback)
+	return self.__onStep:subscribe(callback)
+end
+
+function GroupMotor.prototype:onComplete(callback)
+	assert(typeof(callback) == "function")
+
+	return self.__onComplete:subscribe(callback)
 end
 
 function GroupMotor.prototype:destroy()
