@@ -1,42 +1,7 @@
 return function()
 	local createSignal = require(script.Parent.createSignal)
 
-	local function createSpy(inner)
-		local self = {
-			callCount = 0,
-			values = {},
-			valuesLength = 0,
-		}
-
-		self.value = function(...)
-			self.callCount = self.callCount + 1
-			self.values = {...}
-			self.valuesLength = select("#", ...)
-
-			if inner ~= nil then
-				return inner(...)
-			end
-		end
-
-		self.assertCalledWith = function(_, ...)
-			local len = select("#", ...)
-
-			expect(self.valuesLength).to.equal(len)
-
-			for i = 1, len do
-				local expected = select(i, ...)
-				expect(self.values[i]).to.equal(expected)
-			end
-		end
-
-		setmetatable(self, {
-			__index = function(_, key)
-				error(("%q is not a valid member of spy"):format(key))
-			end,
-		})
-
-		return self
-	end
+	local createSpy = require(script.Parent.createSpy)
 
 	it("should fire subscribers and disconnect them", function()
 		local signal = createSignal()

@@ -13,7 +13,8 @@ local function createSingleMotor(initialValue, goal)
 			value = initialValue,
 			complete = false,
 		},
-		__signal = createSignal(),
+		__onComplete = createSignal(),
+		__onStep = createSignal(),
 	}
 
 	setmetatable(self, SingleMotor)
@@ -44,7 +45,11 @@ function SingleMotor.prototype:step(dt)
 		self.__state = newState
 	end
 
-	self.__signal:fire(self.__state.value)
+	self.__onStep:fire(self.__state.value)
+
+	if self.__state.complete then
+		self.__onComplete:fire(self.__state.value)
+	end
 end
 
 function SingleMotor.prototype:setGoal(goal)
@@ -53,7 +58,13 @@ function SingleMotor.prototype:setGoal(goal)
 end
 
 function SingleMotor.prototype:subscribe(callback)
-	return self.__signal:subscribe(callback)
+	return self.__onStep:subscribe(callback)
+end
+
+function SingleMotor.prototype:onComplete(callback)
+	assert(typeof(callback) == "function")
+
+	return self.__onComplete:subscribe(callback)
 end
 
 function SingleMotor.prototype:destroy()
