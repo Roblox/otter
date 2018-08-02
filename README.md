@@ -31,10 +31,13 @@ You can create a *single* motor to track a single value:
 local object = Instance.new("Frame")
 object.Size = UDim2.new(0, 50, 0, 50)
 
--- Our initial value is 0, we're moving to 50.
-local motor = Otter.createSingleMotor(0, Otter.spring(50))
+-- Our initial value is 0
+local motor = Otter.createSingleMotor(0)
 
-motor:subscribe(function(value)
+-- ...but we're moving to 50!
+motor:setGoal(Otter.spring(50))
+
+motor:onStep(function(value)
 	object.Position = UDim2.new(0, value, 0, 0)
 end)
 
@@ -49,16 +52,18 @@ local object = Instance.new("Frame")
 object.Size = UDim2.new(0, 50, 0, 50)
 
 -- Our initial value is { x = 0, y = 0 }.
--- We're moving to { x = 50, y = 50 } with a spring on the X axis.
 local multimotor = Otter.createGroupMotor({
 	x = 0,
 	y = 0,
-}, {
+})
+
+-- We're moving to { x = 50, y = 50 } with a spring on the X axis.
+multimotor:setGoal({
 	x = Otter.spring(50),
 	y = Otter.instant(50),
 })
 
-multimotor:subscribe(function(values)
+multimotor:onStep(function(values)
 	object.Position = UDim2.new(0, values.x, 0, values.y)
 end)
 
@@ -81,7 +86,7 @@ multimotor:setGoal({
 })
 ```
 
-At any time, we can stop our motor, and even step it manually. This can be useful for tests!
+At any time, we can stop our motor, and even step it manually. This is useful for tests!
 
 ```lua
 motor:stop()
