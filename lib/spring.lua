@@ -102,6 +102,11 @@ local function step(self, state, dt)
 
 	local complete = velocityOffset < RESTING_VELOCITY_LIMIT and positionOffset < RESTING_POSITION_LIMIT
 
+	if complete then
+		p1 = self.__goalPosition
+		v1 = 0
+	end
+
 	return {
 		value = p1,
 		velocity = v1,
