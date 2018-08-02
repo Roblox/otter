@@ -6,12 +6,14 @@ local SingleMotor = {}
 SingleMotor.prototype = {}
 SingleMotor.__index = SingleMotor.prototype
 
-local function createSingleMotor(initialValue, goal)
+local function createSingleMotor(initialValue)
+	assert(typeof(initialValue) == "number")
+
 	local self = {
-		__goal = goal,
+		__goal = nil,
 		__state = {
 			value = initialValue,
-			complete = false,
+			complete = true,
 		},
 		__onComplete = createSignal(),
 		__onStep = createSignal(),
@@ -24,10 +26,6 @@ end
 
 function SingleMotor.prototype:start()
 	self.__connection = RunService.RenderStepped:Connect(function(dt)
-		if self.__state.complete then
-			return
-		end
-
 		self:step(dt)
 	end)
 end
@@ -39,6 +37,16 @@ function SingleMotor.prototype:stop()
 end
 
 function SingleMotor.prototype:step(dt)
+	assert(typeof(dt) == "number")
+
+	if self.__state.complete then
+		return
+	end
+
+	if self.__goal == nil then
+		return
+	end
+
 	local newState = self.__goal:step(self.__state, dt)
 
 	if newState ~= nil then
@@ -57,7 +65,9 @@ function SingleMotor.prototype:setGoal(goal)
 	self.__state.complete = false
 end
 
-function SingleMotor.prototype:subscribe(callback)
+function SingleMotor.prototype:onStep(callback)
+	assert(typeof(callback) == "function")
+
 	return self.__onStep:subscribe(callback)
 end
 

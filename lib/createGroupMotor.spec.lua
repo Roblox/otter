@@ -34,34 +34,26 @@ return function()
 	end
 
 	it("should be a valid motor", function()
-		local motor = createGroupMotor({}, {})
+		local motor = createGroupMotor({})
 		validateMotor(motor)
 		motor:destroy()
 	end)
 
-	describe("onComplete should be called when", function()
-		it("starts completed in motion", function()
+	describe("onStep", function()
+		it("should not be called initially", function()
 			local motor = createGroupMotor({
-				x = 0,
-			}, {
-				x = createStepper(0),
+
 			})
-
-			local spy = createSpy()
-
-			motor:onComplete(spy.value)
-
-			motor:step(0)
-
-			expect(spy.callCount).to.equal(1)
-
-			motor:destroy()
 		end)
+	end)
 
+	describe("onComplete should be called when", function()
 		it("has completed its motion", function()
 			local motor = createGroupMotor({
 				x = 0,
-			}, {
+			})
+
+			motor:setGoal({
 				x = createStepper(5),
 			})
 
@@ -82,7 +74,9 @@ return function()
 			local motor = createGroupMotor({
 				x = 0,
 				y = 10,
-			}, {
+			})
+
+			motor:setGoal({
 				x = createStepper(2),
 				y = createStepper(5),
 			})
@@ -109,7 +103,9 @@ return function()
 		it("has restarted its motion", function()
 			local motor = createGroupMotor({
 				x = 0,
-			}, {
+			})
+
+			motor:setGoal({
 				x = createStepper(3),
 			})
 
@@ -138,15 +134,33 @@ return function()
 	end)
 
 	describe("onComplete should not be called when", function()
+		it("has no goals set", function()
+			local motor = createGroupMotor({
+				x = 2,
+			})
+
+			local spy = createSpy()
+			motor:onComplete(spy.value)
+
+			for _ = 1, 3 do
+				motor:step(1)
+			end
+
+			expect(spy.callCount).to.equal(0)
+
+			motor:destroy()
+		end)
+
 		it("has not completed motion", function()
 			local motor = createGroupMotor({
 				x = 0,
-			}, {
+			})
+
+			motor:setGoal({
 				x = createStepper(2),
 			})
 
 			local spy = createSpy()
-
 			motor:onComplete(spy.value)
 
 			motor:step(1)
@@ -160,13 +174,14 @@ return function()
 			local motor = createGroupMotor({
 				x = 0,
 				y = 0,
-			}, {
+			})
+
+			motor:setGoal({
 				x = createStepper(0),
 				y = createStepper(2),
 			})
 
 			local spy = createSpy()
-
 			motor:onComplete(spy.value)
 
 			motor:step(1)
@@ -179,12 +194,13 @@ return function()
 		it("does not call step", function()
 			local motor = createGroupMotor({
 				x = 0,
-			}, {
+			})
+
+			motor:setGoal({
 				x = createStepper(0),
 			})
 
 			local spy = createSpy()
-
 			motor:onComplete(spy.value)
 
 			expect(spy.callCount).to.equal(0)

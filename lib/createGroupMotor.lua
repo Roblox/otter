@@ -34,10 +34,6 @@ end
 
 function GroupMotor.prototype:start()
 	self.__connection = RunService.RenderStepped:Connect(function(dt)
-		if self.__allComplete then
-			return
-		end
-
 		self:step(dt)
 	end)
 end
@@ -51,18 +47,26 @@ end
 function GroupMotor.prototype:step(dt)
 	assert(typeof(dt) == "number")
 
+	if self.__allComplete then
+		return
+	end
+
 	local allComplete = true
 	local values = {}
 
-	for key, goal in pairs(self.__goals) do
-		local state = self.__states[key]
-
+	for key, state in pairs(self.__states) do
 		if not state.complete then
-			local maybeNewState = goal:step(state, dt)
+			local goal = self.__goals[key]
 
-			if maybeNewState ~= nil then
-				state = maybeNewState
-				self.__states[key] = maybeNewState
+			if goal ~= nil then
+				local maybeNewState = goal:step(state, dt)
+
+				if maybeNewState ~= nil then
+					state = maybeNewState
+					self.__states[key] = maybeNewState
+				end
+			else
+				state.complete = true
 			end
 
 			if not state.complete then
@@ -73,11 +77,12 @@ function GroupMotor.prototype:step(dt)
 		values[key] = state.value
 	end
 
+	local wasAllComplete = self.__allComplete
 	self.__allComplete = allComplete
 
 	self.__onStep:fire(values)
 
-	if allComplete then
+	if allComplete and not wasAllComplete then
 		self.__onComplete:fire(values)
 	end
 end
@@ -100,7 +105,7 @@ function GroupMotor.prototype:setGoal(goals)
 	self.__allComplete = false
 end
 
-function GroupMotor.prototype:subscribe(callback)
+function GroupMotor.prototype:onStep(callback)
 	assert(typeof(callback) == "function")
 
 	return self.__onStep:subscribe(callback)
