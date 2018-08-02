@@ -1,4 +1,4 @@
-local function join(target, ...)
+local function assign(target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 
@@ -10,4 +10,4 @@ local function join(target, ...)
 	return target
 end
 
-return join
+return assign

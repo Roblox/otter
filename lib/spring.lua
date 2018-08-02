@@ -5,7 +5,7 @@
 	https://gist.github.com/Fraktality/1033625223e13c01aa7144abe4aaf54d
 ]]
 
-local merge = require(script.Parent.merge)
+local assign = require(script.Parent.assign)
 
 local pi = math.pi
 local abs = math.abs
@@ -119,7 +119,7 @@ local function spring(goalPosition, inputOptions)
 
 	if inputOptions ~= nil then
 		assert(typeof(inputOptions) == "table")
-		merge(options, inputOptions)
+		assign(options, inputOptions)
 	end
 
 	local dampingRatio = options.dampingRatio
