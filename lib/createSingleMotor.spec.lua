@@ -41,17 +41,18 @@ return function()
 	end
 
 	it("should be a valid motor", function()
-		local motor = createSingleMotor(0, identityGoal)
+		local motor = createSingleMotor(0)
 		validateMotor(motor)
 		motor:destroy()
 	end)
 
 	it("should invoke subscribers with new values", function()
-		local motor = createSingleMotor(8, identityGoal)
+		local motor = createSingleMotor(8)
+		motor:setGoal(identityGoal)
 
 		local spy = createSpy()
 
-		local disconnect = motor:subscribe(spy.value)
+		local disconnect = motor:onStep(spy.value)
 
 		expect(spy.callCount).to.equal(0)
 
@@ -68,23 +69,9 @@ return function()
 	end)
 
 	describe("onComplete should be called when", function()
-		it("starts completed in motion", function()
-			local motor = createSingleMotor(0, createStepper(0))
-
-			local spy = createSpy()
-
-			motor:onComplete(spy.value)
-
-			motor:step(0)
-
-			spy:assertCalledWith(0)
-			expect(spy.callCount).to.equal(1)
-
-			motor:destroy()
-		end)
-
 		it("has completed its motion", function()
-			local motor = createSingleMotor(0, createStepper(5))
+			local motor = createSingleMotor(0)
+			motor:setGoal(createStepper(5))
 
 			local spy = createSpy()
 
@@ -100,7 +87,8 @@ return function()
 		end)
 
 		it("has restarted its motion", function()
-			local motor = createSingleMotor(0, createStepper(5))
+			local motor = createSingleMotor(0)
+			motor:setGoal(createStepper(5))
 
 			local spy = createSpy()
 
@@ -128,7 +116,8 @@ return function()
 
 	describe("onComplete should not be called when", function()
 		it("has not completed motion", function()
-			local motor = createSingleMotor(0, createStepper(10))
+			local motor = createSingleMotor(0)
+			motor:setGoal(createStepper(10))
 
 			local spy = createSpy()
 
@@ -142,7 +131,8 @@ return function()
 		end)
 
 		it("does not call step", function()
-			local motor = createSingleMotor(0, createStepper(0))
+			local motor = createSingleMotor(0)
+			motor:setGoal(createStepper(0))
 
 			local spy = createSpy()
 
