@@ -7,30 +7,22 @@ local GroupMotor = {}
 GroupMotor.prototype = {}
 GroupMotor.__index = GroupMotor.prototype
 
-local function createGroupMotor(initialValues, goals)
+local function createGroupMotor(initialValues)
 	assert(typeof(initialValues) == "table")
-	assert(typeof(goals) == "table")
 
 	local states = {}
 
-	for key in pairs(goals) do
-		local initialValue = initialValues[key]
-
-		if initialValue == nil then
-			local message = ("Missing initial value %q")
-			error(message, 2)
-		end
-
+	for key, value in pairs(initialValues) do
 		states[key] = {
-			value = initialValue,
-			complete = false,
+			value = value,
+			complete = true,
 		}
 	end
 
 	local self = {
-		__goals = goals,
+		__goals = {},
 		__states = states,
-		__allComplete = false,
+		__allComplete = true,
 		__onComplete = createSignal(),
 		__onStep = createSignal(),
 	}
@@ -66,19 +58,16 @@ function GroupMotor.prototype:step(dt)
 		local state = self.__states[key]
 
 		if not state.complete then
-			local newState = goal:step(state, dt)
+			local maybeNewState = goal:step(state, dt)
 
-			if newState == nil then
-				newState = state
-			else
-				state = newState
+			if maybeNewState ~= nil then
+				state = maybeNewState
+				self.__states[key] = maybeNewState
 			end
 
-			if not newState.complete then
+			if not state.complete then
 				allComplete = false
 			end
-
-			self.__states[key] = newState
 		end
 
 		values[key] = state.value
@@ -99,8 +88,15 @@ function GroupMotor.prototype:setGoal(goals)
 	self.__goals = merge({}, self.__goals, goals)
 
 	for key in pairs(goals) do
-		self.__states[key].complete = false
+		local state = self.__states[key]
+
+		if state == nil then
+			error(("Cannot set goal for the value %s because it doesn't exist"):format(tostring(key)), 2)
+		end
+
+		state.complete = false
 	end
+
 	self.__allComplete = false
 end
 
