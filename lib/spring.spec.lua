@@ -40,19 +40,21 @@ return function()
 	end)
 
 	it("should return not complete when in motion", function()
-		local s = spring(100, {
+		local goal = spring(100, {
 			dampingRatio = 0.1,
 			frequency = 10,
 		})
 
-		local state = s:step({
+		local state = {
 			value = 1,
 			velocity = 0,
 			complete = false,
-		}, 1)
+		}
 
-		expect(state.value > 1).to.equal(true)
-		expect(math.abs(state.velocity) > 0).to.equal(true)
+		state = goal:step(state, 1e-3)
+
+		expect(state.value < 100).to.equal(true)
+		expect(state.velocity > 0).to.equal(true)
 		expect(state.complete).to.equal(false)
 	end)
 
@@ -74,8 +76,8 @@ return function()
 			end
 
 			expect(state.complete).to.equal(true)
-			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
-			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
+			expect(state.value).to.equal(3)
+			expect(state.velocity).to.equal(0)
 		end)
 
 		it("is over damped", function()
@@ -95,8 +97,8 @@ return function()
 			end
 
 			expect(state.complete).to.equal(true)
-			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
-			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
+			expect(state.value).to.equal(3)
+			expect(state.velocity).to.equal(0)
 		end)
 
 		it("is under damped", function()
@@ -116,8 +118,8 @@ return function()
 			end
 
 			expect(state.complete).to.equal(true)
-			expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
-			expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
+			expect(state.value).to.equal(3)
+			expect(state.velocity).to.equal(0)
 		end)
 	end)
 
@@ -139,7 +141,7 @@ return function()
 		state = s:step(state, 0.5)
 
 		expect(state.complete).to.equal(true)
-		expect(math.abs(state.value - 3) < positionLimit).to.equal(true)
-		expect(math.abs(state.velocity) < velocityLimit).to.equal(true)
+		expect(state.value).to.equal(3)
+		expect(state.velocity).to.equal(0)
 	end)
 end
