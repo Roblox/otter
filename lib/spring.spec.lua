@@ -1,6 +1,3 @@
-local positionLimit = 1e-5
-local velocityLimit = 1e-7
-
 return function()
 	local spring = require(script.Parent.spring)
 
