@@ -42,8 +42,17 @@ return function()
 	describe("onStep", function()
 		it("should not be called initially", function()
 			local motor = createGroupMotor({
-
+				x = 0,
 			})
+
+			local spy = createSpy()
+			motor:onStep(spy.value)
+
+			motor:setGoal({
+				x = createStepper(5),
+			})
+
+			expect(spy.callCount).to.equal(0)
 		end)
 	end)
 
