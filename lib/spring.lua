@@ -14,8 +14,8 @@ local sin = math.sin
 local cos = math.cos
 local sqrt = math.sqrt
 
-local RESTING_VELOCITY_LIMIT = 1e-7
-local RESTING_POSITION_LIMIT = 1e-5
+local RESTING_VELOCITY_LIMIT = 1e-3
+local RESTING_POSITION_LIMIT = 1e-2
 
 local function step(self, state, dt)
 	-- Advance the spring simulation by dt seconds.
