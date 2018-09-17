@@ -1,6 +1,5 @@
 <h1 align="center">Otter</h1>
 <div align="center">
-<!-- Coming soon!
 	<a href="https://travis-ci.org/Roblox/otter">
 		<img src="https://api.travis-ci.org/Roblox/otter.svg?branch=master" alt="Travis-CI Build Status" />
 	</a>
@@ -10,7 +9,6 @@
 	<a href="https://roblox.github.io/otter">
 		<img src="https://img.shields.io/badge/docs-website-green.svg" alt="Documentation" />
 	</a>
--->
 </div>
 
 <div align="center">
@@ -20,7 +18,17 @@
 <div>&nbsp;</div>
 
 ## Installation
-*In progress*
+
+### Filesystem
+* Add this repository as a Git submodule or copy it into your project
+* Use a plugin like [Rojo](https://github.com/LPGhatguy/rojo) to sync the `lib` folder into a place
+
+### Model File
+* Download the `rbxmx` model file attached to the latest release from the [GitHub releases page](https://github.com/Roblox/otter/releases)
+* Insert the model into Studio into a place like `ReplicatedStorage`
+
+## Documentation
+Documentation for Otter is available on [the official documentation website](https://roblox.github.io/otter).
 
 ## Usage
 For each value that needs to be animated, create a motor object and subscribe to it.
@@ -104,4 +112,14 @@ multimotor:destroy()
 ```
 
 ## License
-Otter is available under the Apache 2.0 license. See [LICENSE](LICENSE) for details.
+Licensed under either of
+
+* Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+* MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
+
+### Contribution
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+
+Take a look at the [contribution guide](CONTRIBUTING.md) for guidelines on how to contribute to Otter.

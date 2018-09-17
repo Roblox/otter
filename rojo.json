@@ -3,7 +3,15 @@
   "partitions": {
     "lib": {
       "path": "lib",
-      "target": "ReplicatedStorage.Otter"
+      "target": "ReplicatedStorage.Modules.Otter"
+    },
+    "modules/testez": {
+      "path": "modules/testez/lib",
+      "target": "ReplicatedStorage.Modules.TestEZ"
+    },
+    "run-tests": {
+      "path": "scripts/run-tests.server.lua",
+      "target": "ServerScriptService.RunTests-Otter"
     }
   }
 }
