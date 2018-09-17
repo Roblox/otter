@@ -1,39 +1,40 @@
 --[[
-	Loads our library and all of its dependencies, then runs tests using TestEZ.
+	Loads our project and all of its dependencies using Lemur, then runs tests
+	using TestEZ.
 ]]
 
 -- If you add any dependencies, add them to this table so they'll be loaded!
 local LOAD_MODULES = {
-	{"lib", "Library"},
+	{"lib", "Otter"},
 	{"modules/testez/lib", "TestEZ"},
 }
 
--- This makes sure we can load Lemur and other libraries that depend on init.lua
+-- This makes sure we can load libraries that depend on init.lua, like Lemur.
 package.path = package.path .. ";?/init.lua"
 
 -- If this fails, make sure you've cloned all Git submodules of this repo!
 local lemur = require("modules.lemur")
 
--- Create a virtual Roblox tree
+-- A Habitat is an emulated DataModel from Lemur
 local habitat = lemur.Habitat.new()
 
--- We'll put all of our library code and dependencies here
-local Root = lemur.Instance.new("Folder")
-Root.Name = "Root"
+local Modules = lemur.Instance.new("Folder")
+Modules.Name = "Modules"
+Modules.Parent = habitat.game:GetService("ReplicatedStorage")
 
--- Load all of the modules specified above
 for _, module in ipairs(LOAD_MODULES) do
 	local container = habitat:loadFromFs(module[1])
 	container.Name = module[2]
-	container.Parent = Root
+	container.Parent = Modules
 end
 
--- Load TestEZ and run our tests
-local TestEZ = habitat:require(Root.TestEZ)
+local TestEZ = habitat:require(Modules.TestEZ)
 
-local results = TestEZ.TestBootstrap:run(Root.Library, TestEZ.Reporters.TextReporter)
+-- Run all tests, collect results, and report to stdout.
+local results = TestEZ.TestBootstrap:run({ Modules.Otter }, TestEZ.Reporters.TextReporter)
 
--- Did something go wrong?
 if results.failureCount > 0 then
+	-- If something went wrong, explicitly terminate with a failure error code
+	-- so that services like Travis-CI will know.
 	os.exit(1)
 end

@@ -1,4 +1,5 @@
 # http://kiki.to/blog/2016/02/04/talk-continuous-integration-with-lua/
+
 language: python
 sudo: false
 
@@ -16,7 +17,6 @@ before_install:
 
 install:
   - luarocks install luafilesystem
-  - luarocks install busted
   - luarocks install luacov
   - luarocks install luacov-coveralls
   - luarocks install luacheck
