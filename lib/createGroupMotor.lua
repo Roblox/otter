@@ -38,7 +38,7 @@ function GroupMotor.prototype:start()
 		return
 	end
 
-	self.__connection = RunService.RenderStepped:Connect(function(dt)
+	self.__connection = RunService.Heartbeat:Connect(function(dt)
 		self:step(dt)
 	end)
 
