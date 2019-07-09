@@ -9,8 +9,12 @@ theme:
     primary: 'Light Blue'
     accent: 'Light Blue'
 
-pages:
+nav:
   - Home: index.md
+  - Usage:
+    - Motors: usage/motors.md
+    - Goals: usage/goals.md
+    - Roact: usage/roact.md
   - API Reference: api-reference.md
 
 markdown_extensions:
