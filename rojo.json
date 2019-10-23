@@ -1,9 +1,0 @@
-{
-  "name": "otter",
-  "partitions": {
-    "lib": {
-      "path": "lib",
-      "target": "ReplicatedStorage.Otter"
-    }
-  }
-}
