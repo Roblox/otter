@@ -111,6 +111,10 @@ motor:destroy()
 multimotor:destroy()
 ```
 
+## Demo App
+You can play with spring settings in a demo app on Roblox: https://www.roblox.com/games/4739513533\
+Try setting Damping Ratio to 0.1.
+
 ## License
 Licensed under either of
 
