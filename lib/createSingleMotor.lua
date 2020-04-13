@@ -65,8 +65,8 @@ function SingleMotor.prototype:step(dt)
 	self.__onStep:fire(self.__state.value)
 
 	if self.__state.complete then
-		self.__onComplete:fire(self.__state.value)
 		self:stop()
+		self.__onComplete:fire(self.__state.value)
 	end
 end
 

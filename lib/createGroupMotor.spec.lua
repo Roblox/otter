@@ -58,6 +58,39 @@ return function()
 		end)
 	end)
 
+	describe("setGoal", function()
+		it("should work as intended in onComplete callbacks", function()
+			local motor = createGroupMotor({
+				x = 0,
+			})
+
+			local spy = createSpy(function()
+				motor:setGoal({ x = createStepper(3), })
+			end)
+
+			motor:onComplete(spy.value)
+
+			motor:setGoal({ x = createStepper(3), })
+
+			for _ = 1, 3 do
+				motor:step(1)
+			end
+
+			expect(spy.callCount).to.equal(1)
+			--make sure the motor continues to run after calling setGoal in onComplete
+			expect(motor.__running).to.equal(true)
+
+			for _ = 1, 3 do
+				motor:step(1)
+			end
+
+			expect(spy.callCount).to.equal(2)
+			expect(motor.__running).to.equal(true)
+
+			motor:destroy()
+		end)
+	end)
+
 	describe("onComplete should be called when", function()
 		it("has completed its motion", function()
 			local motor = createGroupMotor({
