@@ -90,11 +90,11 @@ function GroupMotor.prototype:step(dt)
 
 	self.__onStep:fire(values)
 
-	-- Check self.__allComplete as the motor may have been restarted in the onStep callback 
+	-- Check self.__allComplete as the motor may have been restarted in the onStep callback
 	-- even if allComplete is true.
 	if self.__allComplete and not wasAllComplete then
-		self.__onComplete:fire(values)
 		self:stop()
+		self.__onComplete:fire(values)
 	end
 end
 
