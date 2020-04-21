@@ -1,7 +1,9 @@
 # Otter Version History
 
 ## master
-* *No changes*
+* Added new configs to set the resting limit for the spring ([#36](https://github.com/Roblox/otter/pull/36))
+  * restingVelocityLimit - configures the resting velocity limit of the spring. Default: 0.001
+  * restingPositionLimit - configures the resting position limit of the spring. Default: 0.01
 
 ## 0.1.1
 * Allow for setting a new goal in onStep callback for groupMotor ([#27](https://github.com/Roblox/otter/pull/27))

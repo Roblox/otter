@@ -29,6 +29,12 @@ Valid spring parameters are:
 
 * `frequency`: The undamped frequency of the spring in cycles per second.
 * `dampingRatio`: The damping ratio of the spring.
+* `restingVelocityLimit`: The resting velocity limit for the spring. Defaults to 0.001.
+* `restingPositionLimit`: The resting position limit for the spring. Defaults to 0.01.
+
+The spring will be considered "resting" when both its position and velocity are under their resting limits. After that point, Otter stops simulating the spring and will fire the motor's `onComplete` handler.
+
+Tweaking `restingVelocityLimit` and `restingPositionLimit` may be necessary if `onComplete` fires too early, and the spring jumps to its goal, or if `onComplete` fires too late, and the spring sits at its goal for some time.
 
 ---
 
