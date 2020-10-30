@@ -3,7 +3,6 @@
 ## Unreleased
 
 ## 0.1.3
-
 * Prevent `__onComplete` from being fired in `step` if an onStep callback stops the motor beforehand
 
 ## 0.1.2
