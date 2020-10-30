@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.1.3
+
+* Prevent `__onComplete` from being fired in `step` if an onStep callback stops the motor beforehand
+
 ## 0.1.2
 * Added new configs to set the resting limit for the spring ([#36](https://github.com/Roblox/otter/pull/36))
   * restingVelocityLimit - configures the resting velocity limit of the spring. Default: 0.001
