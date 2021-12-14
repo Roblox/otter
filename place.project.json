@@ -1,31 +1,25 @@
 {
-    "name": "Otter",
-    "tree": {
-        "$className": "DataModel",
-        "ReplicatedStorage": {
-            "$className": "ReplicatedStorage",
-            "Modules": {
-                "$className": "Folder",
+  "name": "Otter",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Packages": {
+        "$path": "Packages",
 
-                "TestEZ": {
-                    "$path": "modules/testez/lib"
-                },
-                "Otter": {
-                    "$path": "lib"
-                }
-            }
-        },
-        "ServerScriptService": {
-            "$className": "ServerScriptService",
-            "RunTests-Cryo": {
-                "$path": "scripts/run-tests.server.lua"
-            }
-        },
-        "Players": {
-            "$className": "Players",
-            "$properties": {
-                "CharacterAutoLoads": false
-            }
+        "Otter": {
+          "$path": "lib"
         }
+      }
+    },
+    "ServerScriptService": {
+      "Tests": {
+        "$path": "tests"
+      }
+    },
+    "Players": {
+      "$properties": {
+        "CharacterAutoLoads": false
+      }
     }
+  }
 }

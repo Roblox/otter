@@ -1,0 +1,7 @@
+{
+  "run": "${configFolder}/spec.lua",
+  "load": {
+    "place": "$configDir/../place.project.json",
+    "asRobloxScript": true
+  }
+}

@@ -1,7 +1,12 @@
 [package]
-name = "roblox/otter"
-author = "Roblox"
+name = "Otter"
+authors = [
+    "Roblox"
+]
 license = "MIT/Apache-2.0"
 content_root = "lib"
 version = "0.1.3"
 files = [ "*", "!*.spec.lua" ]
+
+[dev_dependencies]
+TestEZ = "github.com/Roblox/testez@0.4.1"

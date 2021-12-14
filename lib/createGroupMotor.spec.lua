@@ -10,7 +10,7 @@ return function()
 			stepCount = 0,
 		}
 
-		self.step = function(_, state, dt)
+		self.step = function(_, state, _dt)
 			self.stepCount = self.stepCount + 1
 
 			if self.stepCount >= numSteps then
@@ -65,12 +65,12 @@ return function()
 			})
 
 			local spy = createSpy(function()
-				motor:setGoal({ x = createStepper(3), })
+				motor:setGoal({ x = createStepper(3) })
 			end)
 
 			motor:onComplete(spy.value)
 
-			motor:setGoal({ x = createStepper(3), })
+			motor:setGoal({ x = createStepper(3) })
 
 			for _ = 1, 3 do
 				motor:step(1)
@@ -263,7 +263,9 @@ return function()
 
 			local spy = createSpy()
 			motor:onComplete(spy.value)
-			motor:onStep(function() motor:stop() end)
+			motor:onStep(function()
+				motor:stop()
+			end)
 
 			motor:step(1)
 
