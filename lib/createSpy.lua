@@ -7,7 +7,7 @@ local function createSpy(inner)
 
 	self.value = function(...)
 		self.callCount = self.callCount + 1
-		self.values = {...}
+		self.values = { ... }
 		self.valuesLength = select("#", ...)
 
 		if inner ~= nil then

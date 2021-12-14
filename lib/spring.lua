@@ -38,19 +38,18 @@ local function step(self, state, dt)
 	local v0 = state.velocity or 0
 
 	local offset = p0 - g
-	local decay = exp(-dt*d*f)
+	local decay = exp(-dt * d * f)
 
 	local p1, v1
 
 	if d == 1 then -- Critically damped
-		p1 = (v0*dt + offset*(f*dt + 1))*decay + g
-		v1 = (v0 - f*dt*(offset*f + v0))*decay
-
+		p1 = (v0 * dt + offset * (f * dt + 1)) * decay + g
+		v1 = (v0 - f * dt * (offset * f + v0)) * decay
 	elseif d < 1 then -- Underdamped
-		local c = sqrt(1 - d*d)
+		local c = sqrt(1 - d * d)
 
-		local i = cos(f*c*dt)
-		local j = sin(f*c*dt)
+		local i = cos(f * c * dt)
+		local j = sin(f * c * dt)
 
 		-- Problem: Damping ratios close to 1 can cause numerical instability.
 		-- Solution: Rearrange to group terms involving j/c, then find an approximation z for j/c.
@@ -65,38 +64,37 @@ local function step(self, state, dt)
 
 		local z
 		if c > 1e-4 then
-			z = j/c
+			z = j / c
 		else
-			local a = dt*f
-			z = a + ((a*a)*(c*c)*(c*c)/20 - c*c)*(a*a*a)/6
+			local a = dt * f
+			z = a + ((a * a) * (c * c) * (c * c) / 20 - c * c) * (a * a * a) / 6
 		end
 
 		-- Repeat the process with a->dt and c->b=f*c for the f->0 case
 		local y
-		if f*c > 1e-4 then
-			y = j/(f*c)
+		if f * c > 1e-4 then
+			y = j / (f * c)
 		else
-			local b = f*c
-			y = dt + ((dt*dt)*(b*b)*(b*b)/20 - b*b)*(dt*dt*dt)/6
+			local b = f * c
+			y = dt + ((dt * dt) * (b * b) * (b * b) / 20 - b * b) * (dt * dt * dt) / 6
 		end
 
-		p1 = (offset*(i + d*z) + v0*y)*decay + g
-		v1 = (v0*(i - z*d) - offset*(z*f))*decay
-
+		p1 = (offset * (i + d * z) + v0 * y) * decay + g
+		v1 = (v0 * (i - z * d) - offset * (z * f)) * decay
 	else -- Overdamped
-		local c = sqrt(d*d - 1)
+		local c = sqrt(d * d - 1)
 
-		local r1 = -f*(d - c)
-		local r2 = -f*(d + c)
+		local r1 = -f * (d - c)
+		local r2 = -f * (d + c)
 
-		local co2 = (v0 - r1*offset)/(2*f*c)
+		local co2 = (v0 - r1 * offset) / (2 * f * c)
 		local co1 = offset - co2
 
-		local e1 = co1*exp(r1*dt)
-		local e2 = co2*exp(r2*dt)
+		local e1 = co1 * exp(r1 * dt)
+		local e2 = co2 * exp(r2 * dt)
 
 		p1 = e1 + e2 + g
-		v1 = r1*e1 + r2*e2
+		v1 = r1 * e1 + r2 * e2
 	end
 
 	local positionOffset = abs(p1 - self.__goalPosition)

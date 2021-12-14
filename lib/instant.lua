@@ -1,4 +1,4 @@
-local function step(self, state, dt)
+local function step(self, _state, _dt)
 	return {
 		value = self.__targetValue,
 		complete = true,

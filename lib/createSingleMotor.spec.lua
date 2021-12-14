@@ -4,9 +4,8 @@ return function()
 
 	local createSingleMotor = require(script.Parent.createSingleMotor)
 
-
 	local identityGoal = {
-		step = function(self, state, dt)
+		step = function(_self, state, _dt)
 			return state
 		end,
 	}
@@ -17,7 +16,7 @@ return function()
 			stepCount = 0,
 		}
 
-		self.step = function(_, state, dt)
+		self.step = function(_, state, _dt)
 			self.stepCount = self.stepCount + 1
 
 			if self.stepCount >= numSteps then
@@ -198,7 +197,9 @@ return function()
 
 			local spy = createSpy()
 			motor:onComplete(spy.value)
-			motor:onStep(function() motor:stop() end)
+			motor:onStep(function()
+				motor:stop()
+			end)
 
 			motor:step(1)
 
