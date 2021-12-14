@@ -3,8 +3,8 @@
 	<a href="https://github.com/Roblox/otter/actions/workflows/ci.yml">
 		<img src="https://github.com/Roblox/otter/actions/workflows/ci.yml/badge.svg" alt="GitHub CI" />
 	</a>
-	<a href="https://coveralls.io/github/Roblox/otter?branch=master">
-		<img src="https://coveralls.io/repos/github/Roblox/otter/badge.svg?branch=master" alt="Coveralls Coverage" />
+	<a href='https://coveralls.io/github/Roblox/otter?branch=main'>
+		<img src='https://coveralls.io/repos/github/Roblox/otter/badge.svg?branch=main&amp;t=r8LIRE' alt='Coverage Status' />
 	</a>
 	<a href="https://roblox.github.io/otter">
 		<img src="https://img.shields.io/badge/docs-website-green.svg" alt="Documentation" />
