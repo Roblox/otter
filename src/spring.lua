@@ -4,8 +4,8 @@
 	Adapted from
 	https://gist.github.com/Fraktality/1033625223e13c01aa7144abe4aaf54d
 ]]
-
-local assign = require(script.Parent.assign)
+local Packages = script.Parent.Parent
+local assign = require(Packages.Collections).Object.assign
 
 local pi = math.pi
 local abs = math.abs

@@ -1,6 +1,8 @@
 {
-  "testsPath": "$configDir/tests",
+  "testsPath": "$configDir/lest",
   "testRunner": "robloxdev-cli",
-  "fastFlags": ["default"],
+  "fastFlags": [
+    "default"
+  ],
   "rerun": 0
 }

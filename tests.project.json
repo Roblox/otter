@@ -1,0 +1,12 @@
+{
+  "name": "OtterTest",
+  "tree": {
+    "$className": "Folder",
+    "Packages": {
+      "$path": "Packages",
+      "Otter": {
+        "$path": "src"
+      }
+    }
+  }
+}

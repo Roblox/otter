@@ -1,12 +1,15 @@
 [package]
 name = "Otter"
-authors = [
-    "Roblox"
-]
+authors = ["Roblox"]
 license = "MIT/Apache-2.0"
-content_root = "lib"
+content_root = "src"
 version = "0.1.4"
-files = [ "*", "!*.spec.lua" ]
+files = [ "*", "!*.spec.lua", "!jest.config.lua" ]
+
+[dependencies]
+Collections = "github.com/roblox/luau-polyfill@1.2.2"
+Signal = "github.com/roblox/signal-lua@1.0"
 
 [dev_dependencies]
-TestEZ = "github.com/Roblox/testez@0.4.1"
+Jest = "github.com/Roblox/jest-roblox@3.2.5"
+JestGlobals = "github.com/Roblox/jest-roblox@3.2.5"
