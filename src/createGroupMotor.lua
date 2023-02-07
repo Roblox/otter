@@ -1,7 +1,8 @@
+local Packages = script.Parent.Parent
 local RunService = game:GetService("RunService")
 
-local assign = require(script.Parent.assign)
-local createSignal = require(script.Parent.createSignal)
+local Object = require(Packages.Collections).Object
+local createSignal = require(Packages.Signal).createSignal
 
 local GroupMotor = {}
 GroupMotor.prototype = {}
@@ -19,12 +20,17 @@ local function createGroupMotor(initialValues)
 		}
 	end
 
+	local onComplete, fireOnComplete = createSignal()
+	local onStep, fireOnStep = createSignal()
+
 	local self = {
 		__goals = {},
 		__states = states,
 		__allComplete = true,
-		__onComplete = createSignal(),
-		__onStep = createSignal(),
+		__onComplete = onComplete,
+		__fireOnComplete = fireOnComplete,
+		__onStep = onStep,
+		__fireOnStep = fireOnStep,
 		__running = false,
 	}
 
@@ -88,21 +94,21 @@ function GroupMotor.prototype:step(dt)
 	local wasAllComplete = self.__allComplete
 	self.__allComplete = allComplete
 
-	self.__onStep:fire(values)
+	self.__fireOnStep(values)
 
 	-- Check self.__allComplete as the motor may have been restarted in the onStep callback
 	-- even if allComplete is true.
 	-- Check self.__running in case the motor was stopped by onStep
 	if self.__allComplete and not wasAllComplete and self.__running then
 		self:stop()
-		self.__onComplete:fire(values)
+		self.__fireOnComplete(values)
 	end
 end
 
 function GroupMotor.prototype:setGoal(goals)
 	assert(typeof(goals) == "table")
 
-	self.__goals = assign({}, self.__goals, goals)
+	self.__goals = Object.assign({}, self.__goals, goals)
 
 	for key in pairs(goals) do
 		local state = self.__states[key]

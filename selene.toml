@@ -1,4 +1,4 @@
-std = "roblox+testez"
+std = "roblox"
 
 [rules]
 # This rule is used so our calls to assert do not cause Selene errors. This
