@@ -27,10 +27,18 @@ Constructs a goal that uses spring physics to transition to the target value.
 
 Valid spring parameters are:
 
-* `frequency`: The undamped frequency of the spring in cycles per second.
-* `dampingRatio`: The damping ratio of the spring.
-* `restingVelocityLimit`: The resting velocity limit for the spring. Defaults to 0.001.
-* `restingPositionLimit`: The resting position limit for the spring. Defaults to 0.01.
+Option 1
+    * `frequency`: The undamped frequency of the spring in cycles per second.
+    * `dampingRatio`: The damping ratio of the spring.
+    * `restingVelocityLimit`: The resting velocity limit for the spring. Defaults to 0.001.
+    * `restingPositionLimit`: The resting position limit for the spring. Defaults to 0.01.
+
+Option 2
+    * `stiffness`: influences the number of “bounces” in the animation.
+    * `damping`: influences the level of spring in the animation.
+    * `mass`: influences the speed of the animation and height of the bounce.
+    * `restingVelocityLimit`: The resting velocity limit for the spring. Defaults to 0.001.
+    * `restingPositionLimit`: The resting position limit for the spring. Defaults to 0.01.
 
 The spring will be considered "resting" when both its position and velocity are under their resting limits. After that point, Otter stops simulating the spring and will fire the motor's `onComplete` handler.
 

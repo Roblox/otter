@@ -8,10 +8,15 @@ Goals are given to a motor using the motor's `setGoal` method. For group motors,
 
 Spring goals use a model of a physical spring to animate towards a value over time. Spring goals animate faster for larger values automatically - moving over a small distance will visually move slower than moving over a large one. They also preserve velocity and will take time to decelerate. These two properties make your user interface feel more realistic and fluid.
 
-Spring goals are created using the `Otter.spring` constructor. This constructor takes two arguments: the value to move towards and an optional table of parameters. This table has two values:
+Spring goals are created using the `Otter.spring` constructor. This constructor takes two arguments: the value to move towards and an optional table of parameters. This table supports two sets of configurations:
 
-* `frequency`: A number that represents how quickly the spring responds to changes. Higher values move faster, lower values move slower. Defaults to 1.
-* `dampingRatio`: A number that represents how dampened the spring is. Defaults to 1.
+1. `frequency` and `dampingRatio`
+    * `frequency`: A number that represents how quickly the spring responds to changes. Higher values move faster, lower values move slower. Defaults to 1.
+    * `dampingRatio`: A number that represents how dampened the spring is. Defaults to 1.
+2. `stiffness`, `damping` and `mass`
+    * `stiffness`: influences the number of “bounces” in the animation.
+    * `damping`: influences the level of spring in the animation.
+    * `mass`: influences the speed of the animation and height of the bounce.
 
 ## Instant goals
 

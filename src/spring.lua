@@ -114,9 +114,16 @@ local function step(self, state, dt)
 	}
 end
 
+local function translateParameters(damping, stiffness, mass)
+	local dampingRatio = damping / (2 * sqrt(mass * stiffness))
+	local frequency = sqrt(stiffness / mass) / 2 / pi
+	return dampingRatio, frequency
+end
+
 local function spring(goalPosition, inputOptions)
 	assert(typeof(goalPosition) == "number")
 
+	-- natual frequency and damping ratio options
 	local options = {
 		dampingRatio = 1,
 		frequency = 1,
@@ -129,10 +136,23 @@ local function spring(goalPosition, inputOptions)
 		assign(options, inputOptions)
 	end
 
-	local dampingRatio = options.dampingRatio
-	local frequency = options.frequency
+	local dampingRatio
+	local frequency
 	local restingVelocityLimit = options.restingVelocityLimit
 	local restingPositionLimit = options.restingPositionLimit
+
+	local damping = options.damping
+	local stiffness = options.stiffness
+	local mass = options.mass
+
+	if typeof(damping) == "number" and typeof(stiffness) == "number" and typeof(mass) == "number" then
+		-- use Figma style of spring parameters
+		-- Figma SpringSolver: https://svn.webkit.org/repository/webkit/trunk/Source/WebCore/platform/graphics/SpringSolver.h
+		dampingRatio, frequency = translateParameters(damping, stiffness, mass)
+	else
+		dampingRatio = options.dampingRatio
+		frequency = options.frequency
+	end
 
 	assert(typeof(dampingRatio) == "number")
 	assert(typeof(frequency) == "number")
