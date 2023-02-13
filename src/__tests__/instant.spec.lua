@@ -21,7 +21,7 @@ it("should immediately complete", function()
 	}
 
 	local goal = instant(10)
-	state = goal:step(state, 1e-3)
+	state = goal.step(state, 1e-3)
 
 	expect(state.value).toBe(10)
 	expect(state.complete).toBe(true)
@@ -34,10 +34,10 @@ it("should remove extra values from state", function()
 
 		velocity = 7,
 		somethingElse = {},
-	}
+	} :: any
 
 	local goal = instant(10)
-	state = goal:step(state, 1e-3)
+	state = goal.step(state, 1e-3)
 
 	expect(state.velocity).never.toBeDefined()
 	expect(state.somethingElse).never.toBeDefined()

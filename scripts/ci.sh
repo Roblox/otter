@@ -7,8 +7,8 @@ rotrieve install
 
 echo "Run linting and formatting"
 roblox-cli analyze --project tests.project.json
-selene modules
-stylua -c modules
+selene src
+stylua -c src
 
 echo "Run tests"
 lest

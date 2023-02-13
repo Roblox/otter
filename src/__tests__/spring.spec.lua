@@ -6,8 +6,6 @@ local it = JestGlobals.it
 local describe = JestGlobals.describe
 local expect = JestGlobals.expect
 
-local abs = math.abs
-
 local spring = require(script.Parent.Parent.spring)
 
 it("should have all expected APIs", function()
@@ -41,7 +39,7 @@ it("should take damping, stiffness and mass as parameters", function()
 	expect(s.step).toEqual(expect.any("function"))
 end)
 
-it("create two smiliar springs with different set of params, steps should be similar", function()
+it("create two similar springs with different set of params, steps should be similar", function()
 	local s1 = spring(1, {
 		dampingRatio = 0.5,
 		frequency = 3.183,
@@ -58,24 +56,24 @@ it("create two smiliar springs with different set of params, steps should be sim
 		velocity = 0,
 		complete = false,
 	}
-	local state_s1 = s1:step(state, 0.05)
-	local state_s2 = s2:step(state, 0.05)
+	local state_s1 = s1.step(state, 0.05)
+	local state_s2 = s2.step(state, 0.05)
 
-	expect(abs(state_s1.value - state_s2.value)).toBeLessThan(0.001)
-	expect(abs(state_s1.velocity - state_s2.velocity)).toBeLessThan(0.001)
+	expect(state_s1.value).toBeCloseTo(state_s2.value, 2)
+	expect(state_s1.velocity).toBeCloseTo(state_s2.velocity, 2)
 	expect(state_s1.complete).toBe(false)
 	expect(state_s2.complete).toBe(false)
 
-	state_s1 = s1:step(state, 0.5)
-	state_s2 = s2:step(state, 0.5)
+	state_s1 = s1.step(state, 0.5)
+	state_s2 = s2.step(state, 0.5)
 
-	expect(abs(state_s1.value - state_s2.value)).toBeLessThan(0.001)
-	expect(abs(state_s1.velocity - state_s2.velocity)).toBeLessThan(0.001)
+	expect(state_s1.value).toBeCloseTo(state_s2.value, 2)
+	expect(state_s1.velocity).toBeCloseTo(state_s2.velocity, 2)
 	expect(state_s1.complete).toBe(false)
 	expect(state_s2.complete).toBe(false)
 
-	state_s1 = s1:step(state_s1, 1)
-	state_s2 = s2:step(state_s2, 1)
+	state_s1 = s1.step(state_s1, 1)
+	state_s2 = s2.step(state_s2, 1)
 
 	expect(state_s1.value).toEqual(state_s2.value)
 	expect(state_s1.velocity).toEqual(state_s2.velocity)
@@ -91,7 +89,7 @@ it("should handle being still correctly", function()
 		restingPositionLimit = 0.01,
 	})
 
-	local state = s:step({
+	local state = s.step({
 		value = 1,
 		velocity = 0,
 		complete = false,
@@ -110,14 +108,14 @@ it("should return not complete when in motion", function()
 
 	local state = {
 		value = 1,
-		velocity = 0,
+		velocity = 0 :: number?,
 		complete = false,
 	}
 
-	state = goal:step(state, 1e-3)
+	state = goal.step(state, 1e-3)
 
-	expect(state.value < 100).toBe(true)
-	expect(state.velocity > 0).toBe(true)
+	expect(state.value).toBeLessThan(100)
+	expect(state.velocity).toBeGreaterThan(0)
 	expect(state.complete).toBe(false)
 end)
 
@@ -130,12 +128,12 @@ describe("should eventaully complete when", function()
 
 		local state = {
 			value = 1,
-			velocity = 0,
+			velocity = 0 :: number?,
 			complete = false,
 		}
 
 		while not state.complete do
-			state = s:step(state, 0.5)
+			state = s.step(state, 0.5)
 		end
 
 		expect(state.complete).toBe(true)
@@ -151,12 +149,12 @@ describe("should eventaully complete when", function()
 
 		local state = {
 			value = 1,
-			velocity = 0,
+			velocity = 0 :: number?,
 			complete = false,
 		}
 
 		while not state.complete do
-			state = s:step(state, 0.5)
+			state = s.step(state, 0.5)
 		end
 
 		expect(state.complete).toBe(true)
@@ -172,12 +170,12 @@ describe("should eventaully complete when", function()
 
 		local state = {
 			value = 1,
-			velocity = 0,
+			velocity = 0 :: number?,
 			complete = false,
 		}
 
 		while not state.complete do
-			state = s:step(state, 0.5)
+			state = s.step(state, 0.5)
 		end
 
 		expect(state.complete).toBe(true)
@@ -196,10 +194,10 @@ describe("should handle infinite time deltas when", function()
 
 		local state = {
 			value = -10,
-			velocity = 0,
+			velocity = 0 :: number?,
 			complete = false,
 		}
-		state = s:step(state, math.huge)
+		state = s.step(state, math.huge)
 
 		expect(state.complete).toBe(true)
 		expect(state.value).toBe(20)
@@ -215,10 +213,10 @@ describe("should handle infinite time deltas when", function()
 
 		local state = {
 			value = -10,
-			velocity = 0,
+			velocity = 0 :: number?,
 			complete = false,
 		}
-		state = s:step(state, math.huge)
+		state = s.step(state, math.huge)
 
 		expect(state.complete).toBe(true)
 		expect(state.value).toBe(20)
@@ -233,10 +231,10 @@ describe("should handle infinite time deltas when", function()
 
 		local state = {
 			value = -10,
-			velocity = 0,
+			velocity = 0 :: number?,
 			complete = false,
 		}
-		state = s:step(state, math.huge)
+		state = s.step(state, math.huge)
 
 		expect(state.complete).toBe(true)
 		expect(state.value).toBe(20)
@@ -252,14 +250,14 @@ it("should remain complete when completed", function()
 
 	local state = {
 		value = 1,
-		velocity = 0,
+		velocity = 0 :: number?,
 		complete = false,
 	}
 
 	while not state.complete do
-		state = s:step(state, 0.5)
+		state = s.step(state, 0.5)
 	end
-	state = s:step(state, 0.5)
+	state = s.step(state, 0.5)
 
 	expect(state.complete).toBe(true)
 	expect(state.value).toBe(3)

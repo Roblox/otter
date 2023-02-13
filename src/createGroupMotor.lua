@@ -1,16 +1,52 @@
+--!strict
 local Packages = script.Parent.Parent
 local RunService = game:GetService("RunService")
 
 local Object = require(Packages.Collections).Object
-local createSignal = require(Packages.Signal).createSignal
+local Signal = require(Packages.Signal)
+local createSignal = Signal.createSignal
 
-local GroupMotor = {}
-GroupMotor.prototype = {}
-GroupMotor.__index = GroupMotor.prototype
+local types = require(script.Parent.types)
+type AnimationValue = types.AnimationValue
+type Goal = types.Goal
+type State = types.State
+type GroupMotor = types.GroupMotor
 
-local function createGroupMotor(initialValues)
-	assert(typeof(initialValues) == "table")
+type Disconnector = () -> ()
+type Callback<T> = (T) -> ()
 
+type ValueGroup = {
+	[string]: AnimationValue,
+}
+
+type GroupMotorInternal = {
+	__goals: {
+		[string]: Goal,
+	},
+	__states: {
+		[string]: State,
+	},
+	__allComplete: boolean,
+	__onComplete: Signal.Signal<ValueGroup>,
+	__fireOnComplete: Signal.FireSignal<ValueGroup>,
+	__onStep: Signal.Signal<ValueGroup>,
+	__fireOnStep: Signal.FireSignal<ValueGroup>,
+	__running: boolean,
+	__connection: RBXScriptConnection?,
+
+	start: (self: GroupMotorInternal) -> (),
+	stop: (self: GroupMotorInternal) -> (),
+	step: (self: GroupMotorInternal, dt: number) -> (),
+	setGoal: (self: GroupMotorInternal, goal: { [string]: Goal }) -> (),
+	onStep: (self: GroupMotorInternal, callback: Callback<ValueGroup>) -> Disconnector,
+	onComplete: (self: GroupMotorInternal, callback: Callback<ValueGroup>) -> Disconnector,
+	destroy: (self: GroupMotorInternal) -> (),
+}
+
+local GroupMotor = {} :: GroupMotorInternal;
+(GroupMotor :: any).__index = GroupMotor
+
+local function createGroupMotor<T>(initialValues: ValueGroup & T): GroupMotor
 	local states = {}
 
 	for key, value in pairs(initialValues) do
@@ -36,10 +72,10 @@ local function createGroupMotor(initialValues)
 
 	setmetatable(self, GroupMotor)
 
-	return self
+	return self :: any
 end
 
-function GroupMotor.prototype:start()
+function GroupMotor:start()
 	if self.__running then
 		return
 	end
@@ -51,14 +87,14 @@ function GroupMotor.prototype:start()
 	self.__running = true
 end
 
-function GroupMotor.prototype:stop()
+function GroupMotor:stop()
 	if self.__connection ~= nil then
 		self.__connection:Disconnect()
 		self.__running = false
 	end
 end
 
-function GroupMotor.prototype:step(dt)
+function GroupMotor:step(dt)
 	assert(typeof(dt) == "number")
 
 	if self.__allComplete then
@@ -73,7 +109,7 @@ function GroupMotor.prototype:step(dt)
 			local goal = self.__goals[key]
 
 			if goal ~= nil then
-				local maybeNewState = goal:step(state, dt)
+				local maybeNewState = goal.step(state, dt)
 
 				if maybeNewState ~= nil then
 					state = maybeNewState
@@ -105,7 +141,7 @@ function GroupMotor.prototype:step(dt)
 	end
 end
 
-function GroupMotor.prototype:setGoal(goals)
+function GroupMotor:setGoal(goals)
 	assert(typeof(goals) == "table")
 
 	self.__goals = Object.assign({}, self.__goals, goals)
@@ -124,19 +160,23 @@ function GroupMotor.prototype:setGoal(goals)
 	self:start()
 end
 
-function GroupMotor.prototype:onStep(callback)
-	assert(typeof(callback) == "function")
+function GroupMotor:onStep(callback: Callback<any>)
+	local subscription = self.__onStep:subscribe(callback)
 
-	return self.__onStep:subscribe(callback)
+	return function()
+		subscription:unsubscribe()
+	end
 end
 
-function GroupMotor.prototype:onComplete(callback)
-	assert(typeof(callback) == "function")
+function GroupMotor:onComplete(callback: Callback<any>)
+	local subscription = self.__onComplete:subscribe(callback)
 
-	return self.__onComplete:subscribe(callback)
+	return function()
+		subscription:unsubscribe()
+	end
 end
 
-function GroupMotor.prototype:destroy()
+function GroupMotor:destroy()
 	self:stop()
 end
 

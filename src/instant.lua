@@ -1,14 +1,15 @@
-local function step(self, _state, _dt)
-	return {
-		value = self.__targetValue,
-		complete = true,
-	}
-end
+--!strict
+local types = require(script.Parent.types)
+type Goal = types.Goal
 
-local function instant(targetValue)
+local function instant(targetValue): Goal
 	return {
-		__targetValue = targetValue,
-		step = step,
+		step = function()
+			return {
+				value = targetValue,
+				complete = true,
+			}
+		end,
 	}
 end
 
