@@ -12,14 +12,12 @@ local createGroupMotor = require(script.Parent.Parent.createGroupMotor)
 
 -- test motion object that completes after step has been called numSteps times
 local function createStepper(numSteps)
-	local self = {
-		stepCount = 0,
-	}
+	local stepCount = 0
 
-	self.step = function(_, state, _dt)
-		self.stepCount = self.stepCount + 1
+	local function step(state, _dt)
+		stepCount = stepCount + 1
 
-		if self.stepCount >= numSteps then
+		if stepCount >= numSteps then
 			return {
 				value = state.value,
 				velocity = state.velocity,
@@ -30,13 +28,13 @@ local function createStepper(numSteps)
 		return state
 	end
 
-	setmetatable(self, {
+	return setmetatable({
+		step = step,
+	}, {
 		__index = function(_, key)
 			error(("%q is not a valid member of stepper"):format(key))
 		end,
 	})
-
-	return self
 end
 
 it("should be a valid motor", function()
@@ -176,6 +174,29 @@ describe("onComplete should not be called when", function()
 		motor:onComplete(spyFn)
 
 		for _ = 1, 3 do
+			motor:step(1)
+		end
+		expect(spy).toHaveBeenCalledTimes(0)
+
+		motor:destroy()
+	end)
+
+	it("has been unsubscribed", function()
+		local motor = createGroupMotor({
+			x = 0,
+		})
+		motor:setGoal({
+			x = createStepper(5),
+		})
+
+		local spy, spyFn = jest.fn()
+
+		local unsubscribe = motor:onComplete(spyFn)
+		for _ = 1, 3 do
+			motor:step(1)
+		end
+		unsubscribe()
+		for _ = 1, 2 do
 			motor:step(1)
 		end
 		expect(spy).toHaveBeenCalledTimes(0)

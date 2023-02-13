@@ -1,4 +1,5 @@
-/Packages
+/Packages/*
+!/Packages/.robloxrc
 /rotriever.lock
 /luacov.*
 /site

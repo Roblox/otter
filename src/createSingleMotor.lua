@@ -2,13 +2,41 @@
 local Packages = script.Parent.Parent
 local RunService = game:GetService("RunService")
 
-local createSignal = require(Packages.Signal).createSignal
+local Signal = require(Packages.Signal)
+local createSignal = Signal.createSignal
 
-local SingleMotor = {}
-SingleMotor.prototype = {}
-SingleMotor.__index = SingleMotor.prototype
+local types = require(script.Parent.types)
+type AnimationValue = types.AnimationValue
+type Goal<T> = types.Goal<T>
+type State = types.State
+type SingleMotor = types.SingleMotor
 
-local function createSingleMotor(initialValue: number)
+type Disconnector = () -> ()
+type Callback<T> = (T) -> ()
+
+type SingleMotorInternal = {
+	__goal: Goal<any>,
+	__state: State & any,
+	__onComplete: Signal.Signal<AnimationValue>,
+	__fireOnComplete: Signal.FireSignal<AnimationValue>,
+	__onStep: Signal.Signal<AnimationValue>,
+	__fireOnStep: Signal.FireSignal<AnimationValue>,
+	__running: boolean,
+	__connection: RBXScriptConnection?,
+
+	start: (self: SingleMotorInternal) -> (),
+	stop: (self: SingleMotorInternal) -> (),
+	step: (self: SingleMotorInternal, dt: number) -> (),
+	setGoal: (self: SingleMotorInternal, goal: Goal<any>) -> (),
+	onStep: (self: SingleMotorInternal, callback: Callback<AnimationValue>) -> Disconnector,
+	onComplete: (self: SingleMotorInternal, callback: Callback<AnimationValue>) -> Disconnector,
+	destroy: (self: SingleMotorInternal) -> (),
+}
+
+local SingleMotor = {} :: SingleMotorInternal;
+(SingleMotor :: any).__index = SingleMotor
+
+local function createSingleMotor(initialValue: AnimationValue): SingleMotor
 	local onComplete, fireOnComplete = createSignal()
 	local onStep, fireOnStep = createSignal()
 
@@ -27,10 +55,10 @@ local function createSingleMotor(initialValue: number)
 
 	setmetatable(self, SingleMotor)
 
-	return self
+	return self :: any
 end
 
-function SingleMotor.prototype:start()
+function SingleMotor:start()
 	if self.__running then
 		return
 	end
@@ -42,7 +70,7 @@ function SingleMotor.prototype:start()
 	self.__running = true
 end
 
-function SingleMotor.prototype:stop()
+function SingleMotor:stop()
 	if self.__connection ~= nil then
 		self.__connection:Disconnect()
 	end
@@ -50,9 +78,7 @@ function SingleMotor.prototype:stop()
 	self.__running = false
 end
 
-function SingleMotor.prototype:step(dt)
-	assert(typeof(dt) == "number")
-
+function SingleMotor:step(dt: number)
 	if self.__state.complete then
 		return
 	end
@@ -61,7 +87,7 @@ function SingleMotor.prototype:step(dt)
 		return
 	end
 
-	local newState = self.__goal:step(self.__state, dt)
+	local newState = self.__goal.step(self.__state, dt)
 
 	if newState ~= nil then
 		self.__state = newState
@@ -75,15 +101,13 @@ function SingleMotor.prototype:step(dt)
 	end
 end
 
-function SingleMotor.prototype:setGoal(goal)
+function SingleMotor:setGoal(goal)
 	self.__goal = goal
 	self.__state.complete = false
 	self:start()
 end
 
-function SingleMotor.prototype:onStep(callback)
-	assert(typeof(callback) == "function")
-
+function SingleMotor:onStep(callback: Callback<any>)
 	local subscription = self.__onStep:subscribe(callback)
 
 	return function()
@@ -91,9 +115,7 @@ function SingleMotor.prototype:onStep(callback)
 	end
 end
 
-function SingleMotor.prototype:onComplete(callback)
-	assert(typeof(callback) == "function")
-
+function SingleMotor:onComplete(callback: Callback<any>)
 	local subscription = self.__onComplete:subscribe(callback)
 
 	return function()
@@ -101,7 +123,7 @@ function SingleMotor.prototype:onComplete(callback)
 	end
 end
 
-function SingleMotor.prototype:destroy()
+function SingleMotor:destroy()
 	self:stop()
 end
 

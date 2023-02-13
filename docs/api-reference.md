@@ -20,25 +20,46 @@ Constructs a motor that controls a group of values.
 
 ### Otter.spring
 ```
-Otter.spring(targetValue: number, springParams?)
+Otter.spring(targetValue: number, springConfig?)
 ```
 
-Constructs a goal that uses spring physics to transition to the target value.
+Constructs a goal that uses spring physics to transition to the target value. The `springConfig` argument is an optional table of spring configuration data. It can be one of the following:
 
-Valid spring parameters are:
+**SpringConfig**
 
-Option 1
-    * `frequency`: The undamped frequency of the spring in cycles per second.
-    * `dampingRatio`: The damping ratio of the spring.
-    * `restingVelocityLimit`: The resting velocity limit for the spring. Defaults to 0.001.
-    * `restingPositionLimit`: The resting position limit for the spring. Defaults to 0.01.
+The default spring configuration parameters.
 
-Option 2
-    * `stiffness`: influences the number of “bounces” in the animation.
-    * `damping`: influences the level of spring in the animation.
-    * `mass`: influences the speed of the animation and height of the bounce.
-    * `restingVelocityLimit`: The resting velocity limit for the spring. Defaults to 0.001.
-    * `restingPositionLimit`: The resting position limit for the spring. Defaults to 0.01.
+```lua
+type SpringConfig = {
+     -- The undamped frequency of the spring in cycles per second.
+    frequency: number?
+     -- The damping ratio of the spring.
+    dampingRatio: number?
+     -- The resting velocity limit for the spring. Defaults to 0.001.
+    restingVelocityLimit: number?
+     -- The resting position limit for the spring. Defaults to 0.01.
+    restingPositionLimit: number?
+}
+```
+
+**FigmaSpringConfig**
+
+A set of parameters that matches the spring inputs from [design tools like Figma](https://help.figma.com/hc/en-us/articles/360051748654-Prototype-easing-and-spring-animations#Custom_spring_curves).
+
+```lua
+type SpringConfig = {
+    -- Influences the number of “bounces” in the animation.
+    stiffness: number,
+    -- Influences the level of spring in the animation.
+    damping: number,
+    -- Influences the speed of the animation and height of the bounce.
+    mass: number,
+     -- The resting velocity limit for the spring. Defaults to 0.001.
+    restingVelocityLimit: number?
+     -- The resting position limit for the spring. Defaults to 0.01.
+    restingPositionLimit: number?
+}
+```
 
 The spring will be considered "resting" when both its position and velocity are under their resting limits. After that point, Otter stops simulating the spring and will fire the motor's `onComplete` handler.
 

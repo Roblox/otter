@@ -1,6 +1,9 @@
 # Otter Version History
 
 ## Unreleased
+* Improve internal type interface and type strictness, expose public types, and fix inconsistency between single motor and group motor APIs. This is a **breaking change**! ([#45](https://github.com/Roblox/otter/pull/45))
+* Optionally accept Figma-style spring arguments instead of the default (`dampingRatio` and `frequency`) ([#44](https://github.com/Roblox/otter/pull/44))
+* Upgrade to jest 3 ([#43](https://github.com/Roblox/otter/pull/43))
 
 ## 0.1.3
 * Prevent `__onComplete` from being fired in `step` if an onStep callback stops the motor beforehand
