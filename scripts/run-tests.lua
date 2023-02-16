@@ -9,9 +9,11 @@ if not Packages then
 	ProcessService:ExitAsync(1)
 end
 
-local runCLI = require(Packages.Dev.Jest).runCLI
+-- FIXME: workspaces + jest 3.0 testing story still needs some work
+local WorkspaceRoot = Packages._Workspace
+local runCLI = require(WorkspaceRoot.Otter.Dev.Jest).runCLI
 
-local status, result = runCLI(Packages.Otter, {}, { Packages.Otter }):awaitStatus()
+local status, result = runCLI(WorkspaceRoot, {}, { WorkspaceRoot }):awaitStatus()
 
 if status == "Rejected" then
 	print(result)
