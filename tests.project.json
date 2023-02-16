@@ -4,8 +4,8 @@
     "$className": "Folder",
     "Packages": {
       "$path": "Packages",
-      "Otter": {
-        "$path": "src"
+      "_Workspace": {
+        "$path": "scripts/jest"
       }
     }
   }
