@@ -1,15 +1,16 @@
 --!strict
 local Packages = script.Parent.Parent
-local RunService = game:GetService("RunService")
 
 local Signal = require(Packages.Signal)
 local createSignal = Signal.createSignal
+
+local Heartbeat = require(script.Parent.Heartbeat)
 
 local types = require(script.Parent.types)
 type AnimationValue = types.AnimationValue
 type Goal<T> = types.Goal<T>
 type State = types.State
-type SingleMotor = types.SingleMotor
+type Motor<T, U> = types.Motor<T, U>
 
 type Disconnector = () -> ()
 type Callback<T> = (T) -> ()
@@ -35,6 +36,8 @@ type SingleMotorInternal = {
 
 local SingleMotor = {} :: SingleMotorInternal;
 (SingleMotor :: any).__index = SingleMotor
+
+export type SingleMotor = Motor<Goal<any>, AnimationValue>
 
 local function createSingleMotor(initialValue: AnimationValue): SingleMotor
 	local onComplete, fireOnComplete = createSignal()
@@ -63,7 +66,7 @@ function SingleMotor:start()
 		return
 	end
 
-	self.__connection = RunService.Heartbeat:Connect(function(dt)
+	self.__connection = Heartbeat:Connect(function(dt)
 		self:step(dt)
 	end)
 
@@ -107,7 +110,7 @@ function SingleMotor:setGoal(goal)
 	self:start()
 end
 
-function SingleMotor:onStep(callback: Callback<any>)
+function SingleMotor:onStep(callback: Callback<AnimationValue>)
 	local subscription = self.__onStep:subscribe(callback)
 
 	return function()
@@ -115,7 +118,7 @@ function SingleMotor:onStep(callback: Callback<any>)
 	end
 end
 
-function SingleMotor:onComplete(callback: Callback<any>)
+function SingleMotor:onComplete(callback: Callback<AnimationValue>)
 	local subscription = self.__onComplete:subscribe(callback)
 
 	return function()

@@ -1,0 +1,16 @@
+[package]
+name = "OtterBenchmarks"
+authors = ["Roblox"]
+publish = false
+license = "MIT/Apache-2.0"
+content_root = "src"
+version = "0.1.4"
+
+[dependencies]
+Otter = { path = "../otter" }
+ReactOtter = { path = "../react-otter" }
+
+LegacyRoact = "github.com/roblox/roact@1.0"
+
+React = "github.com/roblox/roact-alignment@17.0.1-rc.18"
+ReactRoblox = "github.com/roblox/roact-alignment@17.0.1-rc.18"
