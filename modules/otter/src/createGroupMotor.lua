@@ -1,16 +1,17 @@
 --!strict
 local Packages = script.Parent.Parent
-local RunService = game:GetService("RunService")
 
 local Object = require(Packages.Collections).Object
 local Signal = require(Packages.Signal)
 local createSignal = Signal.createSignal
 
+local Heartbeat = require(script.Parent.Heartbeat)
+
 local types = require(script.Parent.types)
 type AnimationValue = types.AnimationValue
-type Goal = types.Goal
+type Goal<T> = types.Goal<T>
 type State = types.State
-type GroupMotor = types.GroupMotor
+type Motor<T, U> = types.Motor<T, U>
 
 type Disconnector = () -> ()
 type Callback<T> = (T) -> ()
@@ -18,11 +19,12 @@ type Callback<T> = (T) -> ()
 type ValueGroup = {
 	[string]: AnimationValue,
 }
+type GoalGroup = {
+	[string]: Goal<any>,
+}
 
 type GroupMotorInternal = {
-	__goals: {
-		[string]: Goal,
-	},
+	__goals: GoalGroup,
 	__states: {
 		[string]: State,
 	},
@@ -37,7 +39,7 @@ type GroupMotorInternal = {
 	start: (self: GroupMotorInternal) -> (),
 	stop: (self: GroupMotorInternal) -> (),
 	step: (self: GroupMotorInternal, dt: number) -> (),
-	setGoal: (self: GroupMotorInternal, goal: { [string]: Goal }) -> (),
+	setGoal: (self: GroupMotorInternal, goal: GoalGroup) -> (),
 	onStep: (self: GroupMotorInternal, callback: Callback<ValueGroup>) -> Disconnector,
 	onComplete: (self: GroupMotorInternal, callback: Callback<ValueGroup>) -> Disconnector,
 	destroy: (self: GroupMotorInternal) -> (),
@@ -46,7 +48,9 @@ type GroupMotorInternal = {
 local GroupMotor = {} :: GroupMotorInternal;
 (GroupMotor :: any).__index = GroupMotor
 
-local function createGroupMotor<T>(initialValues: ValueGroup & T): GroupMotor
+export type GroupMotor = Motor<GoalGroup, ValueGroup>
+
+local function createGroupMotor(initialValues: ValueGroup): GroupMotor
 	local states = {}
 
 	for key, value in pairs(initialValues) do
@@ -80,7 +84,7 @@ function GroupMotor:start()
 		return
 	end
 
-	self.__connection = RunService.Heartbeat:Connect(function(dt)
+	self.__connection = Heartbeat:Connect(function(dt)
 		self:step(dt)
 	end)
 
@@ -94,9 +98,7 @@ function GroupMotor:stop()
 	end
 end
 
-function GroupMotor:step(dt)
-	assert(typeof(dt) == "number")
-
+function GroupMotor:step(dt: number)
 	if self.__allComplete then
 		return
 	end
@@ -141,9 +143,7 @@ function GroupMotor:step(dt)
 	end
 end
 
-function GroupMotor:setGoal(goals)
-	assert(typeof(goals) == "table")
-
+function GroupMotor:setGoal(goals: GoalGroup)
 	self.__goals = Object.assign({}, self.__goals, goals)
 
 	for key in pairs(goals) do
@@ -160,7 +160,7 @@ function GroupMotor:setGoal(goals)
 	self:start()
 end
 
-function GroupMotor:onStep(callback: Callback<any>)
+function GroupMotor:onStep(callback: Callback<ValueGroup>)
 	local subscription = self.__onStep:subscribe(callback)
 
 	return function()
@@ -168,7 +168,7 @@ function GroupMotor:onStep(callback: Callback<any>)
 	end
 end
 
-function GroupMotor:onComplete(callback: Callback<any>)
+function GroupMotor:onComplete(callback: Callback<ValueGroup>)
 	local subscription = self.__onComplete:subscribe(callback)
 
 	return function()

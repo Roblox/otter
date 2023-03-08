@@ -1,6 +1,5 @@
 std = "roblox"
 
 [rules]
-# This rule is used so our calls to assert do not cause Selene errors. This
-# occurs because the second argument is omitted.
-incorrect_standard_library_use = "allow"
+# Allow use of global for test configuration
+global_usage = "allow"

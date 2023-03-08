@@ -16,24 +16,14 @@ export type Goal<T = Empty> = {
 	step: (state: State & T, dt: number) -> State & T,
 }
 
-export type SingleMotor = {
-	start: (self: SingleMotor) -> (),
-	stop: (self: SingleMotor) -> (),
-	step: (self: SingleMotor, dt: number) -> (),
-	setGoal: (self: SingleMotor, goal: Goal) -> (),
-	onStep: (self: SingleMotor, callback: Callback<AnimationValue>) -> Disconnector,
-	onComplete: (self: SingleMotor, callback: Callback<AnimationValue>) -> Disconnector,
-	destroy: (self: SingleMotor) -> (),
-}
-
-export type GroupMotor = {
-	start: (self: GroupMotor) -> (),
-	stop: (self: GroupMotor) -> (),
-	step: (self: GroupMotor, dt: number) -> (),
-	setGoal: (self: GroupMotor, goal: { [string]: Goal }) -> (),
-	onStep: (self: GroupMotor, callback: Callback<AnimationValue>) -> Disconnector,
-	onComplete: (self: GroupMotor, callback: Callback<AnimationValue>) -> Disconnector,
-	destroy: (self: GroupMotor) -> (),
+export type Motor<T, U> = {
+	start: (self: Motor<T, U>) -> (),
+	stop: (self: Motor<T, U>) -> (),
+	step: (self: Motor<T, U>, dt: number) -> (),
+	setGoal: (self: Motor<T, U>, goal: T) -> (),
+	onStep: (self: Motor<T, U>, callback: Callback<U>) -> Disconnector,
+	onComplete: (self: Motor<T, U>, callback: Callback<U>) -> Disconnector,
+	destroy: (self: Motor<T, U>) -> (),
 }
 
 return nil
