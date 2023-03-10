@@ -8,5 +8,12 @@
     "overrides": [
       "EnableLoadModule=true"
     ]
+  },
+  "lua": {
+    "globals": [
+      "RTL_SKIP_AUTO_CLEANUP=true",
+      "__DEV__=true",
+      "__ROACT_17_MOCK_SCHEDULER__=true"
+    ]
   }
 }

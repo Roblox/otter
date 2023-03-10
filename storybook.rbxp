@@ -1,0 +1,24 @@
+{
+  "fileVersion": 1,
+  "fastFlags": {
+    "overrides": {
+      "FFlagEnableLoadModule": "true"
+    }
+  },
+  "instanceHierarchy": {
+    "name": "React Otter",
+    "tree": {
+      "$className": "DataModel",
+      "ReplicatedStorage": {
+        "$className": "ReplicatedStorage",
+        "Packages": {
+          "$className": "Folder",
+          "$path": "Packages",
+          "Storybook": {
+            "$path": "storybook"
+          }
+        }
+      }
+    }
+  }
+}
