@@ -28,9 +28,16 @@ A pair of benchmarks that help establish a baseline against historical usage by 
 
 These benchmarks measure practical uses of Otter to animate React components using configurations of class components vs function components and state vs bindings for tracking and responding to animation state. They do not use any new functionality from `ReactOtter`. They should provide a good baseline for the 0.1.4 release of Otter that's used in the Universal App.
 
+### Hook
+
+* `react/useAnimatedBinding`
+
+The last of these uses the newly-implemented `ReactOtter.useAnimatedBinding` hook. It's intended to be compared against the various ways of using Otter manually as demonstrated in the other benchmarks.
+
 ## Spring Benchmarks
 
 * `spring/spring`
+* `spring/hookWithSpring`
 * `spring/legacyWithSpring`
 
-A set of benchmarks to measure the cost of spring calculations. Each of these uses a single motor with randomized spring goals and runs 10,000 steps of the spring. The `legacyWithSpring` component measures using springs in actual components and render the same minimal button container component as the React benchmarks.
+A set of benchmarks to measure the cost of spring calculations. Each of these uses a single motor with randomized spring goals and runs 10,000 steps of the spring. The `hookWithSpring` and `legacyWithSpring` components measure using springs in actual components and render the same minimal button container component as the React benchmarks.
