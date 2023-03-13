@@ -1,6 +1,5 @@
 local Packages = script.Parent.Parent.Parent
 local ReactOtter = require(Packages._Workspace.ReactOtter.ReactOtter)
-local Otter = require(Packages._Workspace.Otter.Otter)
 local React = require(Packages._Workspace.ReactOtter.React)
 
 local function ExpandableFrame(props)
@@ -8,7 +7,7 @@ local function ExpandableFrame(props)
 	local height, setGoal = ReactOtter.useAnimatedBinding(0)
 
 	React.useEffect(function()
-		setGoal(Otter.spring(if expanded then 1 else 0))
+		setGoal(ReactOtter.spring(if expanded then 1 else 0))
 	end, { expanded })
 
 	return React.createElement(
