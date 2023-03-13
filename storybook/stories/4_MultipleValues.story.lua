@@ -1,6 +1,5 @@
 local Packages = script.Parent.Parent.Parent
 local ReactOtter = require(Packages._Workspace.ReactOtter.ReactOtter)
-local Otter = require(Packages._Workspace.Otter.Otter)
 local React = require(Packages._Workspace.ReactOtter.React)
 
 local TRANSPARENCY_CONFIG = {
@@ -17,8 +16,8 @@ local function FadeAndGrowIn()
 
 	React.useEffect(function()
 		setGoal({
-			transparency = Otter.spring(if visible then 0 else 1, TRANSPARENCY_CONFIG),
-			scale = Otter.spring(if visible then 1 else 0.8),
+			transparency = ReactOtter.spring(if visible then 0 else 1, TRANSPARENCY_CONFIG),
+			scale = ReactOtter.spring(if visible then 1 else 0.8),
 		})
 	end, { visible })
 

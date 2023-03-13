@@ -6,15 +6,15 @@ repo_url: https://github.com/Roblox/otter
 theme:
   name: material
   palette:
-    primary: 'Light Blue'
-    accent: 'Light Blue'
+    primary: "Light Blue"
+    accent: "Light Blue"
 
 nav:
   - Home: index.md
   - Usage:
-    - Motors: usage/motors.md
-    - Goals: usage/goals.md
-    - Roact: usage/roact.md
+      - Motors: usage/motors.md
+      - Goals: usage/goals.md
+      - React: usage/react.md
   - API Reference: api-reference.md
 
 markdown_extensions:

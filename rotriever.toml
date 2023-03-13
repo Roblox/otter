@@ -1,5 +1,6 @@
 [workspace]
 members = ["modules/*"]
+version = "1.0.0"
 
 [workspace.dependencies]
 JestGlobals = "github.com/roblox/jest-roblox@3.2.2"

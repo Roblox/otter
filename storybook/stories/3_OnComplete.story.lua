@@ -1,6 +1,5 @@
 local Packages = script.Parent.Parent.Parent
 local ReactOtter = require(Packages._Workspace.ReactOtter.ReactOtter)
-local Otter = require(Packages._Workspace.Otter.Otter)
 local React = require(Packages._Workspace.ReactOtter.React)
 
 local SPRING_CONFIG = {
@@ -16,7 +15,7 @@ local function DisabledWhileAnimating()
 	end)
 
 	React.useEffect(function()
-		setGoal(Otter.spring(if translated then 1 else 0), SPRING_CONFIG)
+		setGoal(ReactOtter.spring(if translated then 1 else 0), SPRING_CONFIG)
 		setEnabled(false)
 	end, { translated })
 

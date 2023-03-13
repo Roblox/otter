@@ -1,6 +1,5 @@
 local Packages = script.Parent.Parent.Parent
 local ReactOtter = require(Packages._Workspace.ReactOtter.ReactOtter)
-local Otter = require(Packages._Workspace.Otter.Otter)
 local React = require(Packages._Workspace.ReactOtter.React)
 
 local function ToggleTextSize()
@@ -8,7 +7,7 @@ local function ToggleTextSize()
 	local value, setGoal = ReactOtter.useAnimatedBinding(8)
 
 	React.useEffect(function()
-		setGoal(Otter.spring(if toggled then 24 else 8))
+		setGoal(ReactOtter.spring(if toggled then 24 else 8))
 	end, { toggled })
 
 	return React.createElement("TextButton", {

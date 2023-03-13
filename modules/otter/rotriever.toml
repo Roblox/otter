@@ -1,10 +1,10 @@
 [package]
 name = "Otter"
+version = { workspace = true }
 authors = ["Roblox"]
 license = "MIT/Apache-2.0"
 content_root = "src"
-version = "0.1.4"
-files = [ "*", "!*.spec.lua", "!jest.config.lua" ]
+files = ["*", "!*.spec.lua", "!jest.config.lua"]
 
 [dependencies]
 Collections = "github.com/roblox/luau-polyfill@1.2.2"

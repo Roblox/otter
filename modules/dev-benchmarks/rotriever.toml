@@ -1,10 +1,10 @@
 [package]
 name = "OtterBenchmarks"
+version = { workspace = true }
 authors = ["Roblox"]
 publish = false
 license = "MIT/Apache-2.0"
 content_root = "src"
-version = "0.1.4"
 
 [dependencies]
 Otter = { path = "../otter" }

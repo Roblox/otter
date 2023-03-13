@@ -16,3 +16,13 @@
 </div>
 
 <div>&nbsp;</div>
+
+## Running the Storybook
+
+To see the examples [from the docs](https://roblox.github.io/otter/usage/react/) in action, check out the storybook on this branch:
+
+1. Check out the `CLIXBOX-2754` branch of this repo
+2. Run `rotrieve install` to install dependencies
+3. Open the `storybook.rbxp` file in Roblox Studio
+4. Click the Storybook plugin under the "Plugins" tab to open the storybook UI
+5. Select the storybook titled "React + Otter"
