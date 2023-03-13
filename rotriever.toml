@@ -1,4 +1,5 @@
 [workspace]
+default_member = "Otter"
 members = ["modules/*"]
 version = "1.0.0"
 
