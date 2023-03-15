@@ -1,10 +1,10 @@
 [package]
 name = "ReactOtter"
-version = "1.0.0"
+version = { workspace = true }
 authors = ["Roblox"]
 license = "MIT/Apache-2.0"
 content_root = "src"
-files = ["*", "!*.spec.lua", "!jest.config.lua"]
+files = ["*", "!*.spec.lua", "!**/__tests__/**"]
 
 [dependencies]
 Otter = { path = "../otter" }

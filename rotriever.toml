@@ -1,7 +1,7 @@
 [workspace]
 default_member = "Otter"
 members = ["modules/*"]
-version = "1.0.0"
+version = "1.0.1"
 
 [workspace.dependencies]
 JestGlobals = "github.com/roblox/jest-roblox@3.2.2"

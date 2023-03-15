@@ -4,7 +4,7 @@ version = { workspace = true }
 authors = ["Roblox"]
 license = "MIT/Apache-2.0"
 content_root = "src"
-files = ["*", "!*.spec.lua", "!jest.config.lua"]
+files = ["*", "!*.spec.lua", "!**/__tests__/**"]
 
 [dependencies]
 Collections = "github.com/roblox/luau-polyfill@1.2.2"
