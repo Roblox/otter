@@ -15,11 +15,13 @@ Otter = "github.com/roblox/otter@1.0"
 ReactOtter provides a React hook called `useAnimatedBinding`, a simple and expressive mechanism to drive Otter animations within React function components.
 
 It accepts two arguments:
+
 * `initialValue: number | { [string]: number }` - The starting value for the binding (similar to the value you'd pass to `React.useBinding` or the value you'd pass to `Otter.createSingleMotor`/`Otter.createGroupMotor`)
 	* This can be either a single `number` value or a table that maps string keys to number values; `useAnimatedBinding` will automatically use the right representation under the hood
 * `onComplete: nil | (number | { [string]: number }) -> ()` - An optional parameter that will be called each time an animated transition completes
 
 The hook returns two values to use in your component:
+
 * `value: React.Binding<number | { [string]: number }>` - a `React.Binding` object that will be updated with the motor's progress value at each step while it's running
 * `setGoal: (ReactOtter.Goal) -> ()` - a function that can be used to provide new target values called `goal`s to the animated binding, akin to Otter's `Motor:setGoal(goal)`
 
