@@ -9,6 +9,8 @@ local Heartbeat = require(script.Heartbeat)
 
 export type Goal<T> = types.Goal<T>
 export type Motor<T, U> = types.Motor<T, U>
+export type Unsubscribe = types.Unsubscribe
+export type MotorCallback<T> = types.MotorCallback<T>
 
 export type SingleMotor = createSingleMotor.SingleMotor
 export type GroupMotor = createGroupMotor.GroupMotor

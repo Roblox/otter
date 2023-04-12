@@ -171,3 +171,17 @@ local function FadeAndGrowIn(props)
 	)
 end
 ```
+
+## useMotor
+In rare cases, you may need your React component to update values on _non_-React Instances in the DataModel. To do this, you can use a slightly more lower-level hook called `useMotor`.
+
+!!! warn
+	In most cases, it's preferable to use the binding semantics afforded by `useAnimatedBinding` to reduce boilerplate and keep your use cases simple and idiomatic. Only reach for `useMotor` if you need to animate something that can't accept a binding.
+
+The `useMotor` hook accepts three arguments:
+* `initialValue: number | { [string]: number }` - The starting value for the motor. This works exactly like the `initialValue` argument to `useAnimatedBinding`.
+* `onStep: (number | { [string]: number }) -> ()` - A callback that fires on each step. The current value of the motor will be passed in, honoring the type of your `initialValue` just as `useAnimatedBinding` does.
+* `onComplete: nil | (number | { [string]: number }) -> ()` - An optional parameter that will be called each time an animated transition completes. This works exactly like the `onComplete` argument to `useAnimatedBinding`.
+
+It returns only a `setGoal` function, equivalent to the second return value from `useAnimatedBinding`.
+

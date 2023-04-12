@@ -11,9 +11,8 @@ type AnimationValue = types.AnimationValue
 type Goal<T> = types.Goal<T>
 type State = types.State
 type Motor<T, U> = types.Motor<T, U>
-
-type Disconnector = () -> ()
-type Callback<T> = (T) -> ()
+type Unsubscribe = types.Unsubscribe
+type MotorCallback<T> = types.MotorCallback<T>
 
 type SingleMotorInternal = {
 	__goal: Goal<any>,
@@ -29,8 +28,8 @@ type SingleMotorInternal = {
 	stop: (self: SingleMotorInternal) -> (),
 	step: (self: SingleMotorInternal, dt: number) -> (),
 	setGoal: (self: SingleMotorInternal, goal: Goal<any>) -> (),
-	onStep: (self: SingleMotorInternal, callback: Callback<AnimationValue>) -> Disconnector,
-	onComplete: (self: SingleMotorInternal, callback: Callback<AnimationValue>) -> Disconnector,
+	onStep: (self: SingleMotorInternal, callback: MotorCallback<AnimationValue>) -> Unsubscribe,
+	onComplete: (self: SingleMotorInternal, callback: MotorCallback<AnimationValue>) -> Unsubscribe,
 	destroy: (self: SingleMotorInternal) -> (),
 }
 
@@ -110,7 +109,7 @@ function SingleMotor:setGoal(goal)
 	self:start()
 end
 
-function SingleMotor:onStep(callback: Callback<AnimationValue>)
+function SingleMotor:onStep(callback: MotorCallback<AnimationValue>)
 	local subscription = self.__onStep:subscribe(callback)
 
 	return function()
@@ -118,7 +117,7 @@ function SingleMotor:onStep(callback: Callback<AnimationValue>)
 	end
 end
 
-function SingleMotor:onComplete(callback: Callback<AnimationValue>)
+function SingleMotor:onComplete(callback: MotorCallback<AnimationValue>)
 	local subscription = self.__onComplete:subscribe(callback)
 
 	return function()

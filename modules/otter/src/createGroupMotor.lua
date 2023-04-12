@@ -13,8 +13,8 @@ type Goal<T> = types.Goal<T>
 type State = types.State
 type Motor<T, U> = types.Motor<T, U>
 
-type Disconnector = () -> ()
-type Callback<T> = (T) -> ()
+type Unsubscribe = types.Unsubscribe
+type MotorCallback<T> = types.MotorCallback<T>
 
 type ValueGroup = {
 	[string]: AnimationValue,
@@ -40,8 +40,8 @@ type GroupMotorInternal = {
 	stop: (self: GroupMotorInternal) -> (),
 	step: (self: GroupMotorInternal, dt: number) -> (),
 	setGoal: (self: GroupMotorInternal, goal: GoalGroup) -> (),
-	onStep: (self: GroupMotorInternal, callback: Callback<ValueGroup>) -> Disconnector,
-	onComplete: (self: GroupMotorInternal, callback: Callback<ValueGroup>) -> Disconnector,
+	onStep: (self: GroupMotorInternal, callback: MotorCallback<ValueGroup>) -> Unsubscribe,
+	onComplete: (self: GroupMotorInternal, callback: MotorCallback<ValueGroup>) -> Unsubscribe,
 	destroy: (self: GroupMotorInternal) -> (),
 }
 
@@ -160,7 +160,7 @@ function GroupMotor:setGoal(goals: GoalGroup)
 	self:start()
 end
 
-function GroupMotor:onStep(callback: Callback<ValueGroup>)
+function GroupMotor:onStep(callback: MotorCallback<ValueGroup>)
 	local subscription = self.__onStep:subscribe(callback)
 
 	return function()
@@ -168,7 +168,7 @@ function GroupMotor:onStep(callback: Callback<ValueGroup>)
 	end
 end
 
-function GroupMotor:onComplete(callback: Callback<ValueGroup>)
+function GroupMotor:onComplete(callback: MotorCallback<ValueGroup>)
 	local subscription = self.__onComplete:subscribe(callback)
 
 	return function()

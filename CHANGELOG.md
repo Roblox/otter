@@ -1,6 +1,11 @@
 # Otter Version History
 
 ## Unreleased
+
+## 1.1.0
+* Add a `useMotor` hook that has a slightly lower-level interface to accommodate special cases around animating non-React Instances ([#51](https://github.com/Roblox/otter/pull/51))
+
+## 1.0.1
 * Improve internal type interface and type strictness, expose public types, and fix inconsistency between single motor and group motor APIs. This is a **breaking change**! ([#45](https://github.com/Roblox/otter/pull/45))
 * Optionally accept Figma-style spring arguments instead of the default (`dampingRatio` and `frequency`) ([#44](https://github.com/Roblox/otter/pull/44))
 * Upgrade to jest 3 ([#43](https://github.com/Roblox/otter/pull/43))
