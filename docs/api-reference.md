@@ -21,6 +21,24 @@ The returned `binding` can be used to provide values to properties to your compo
 
 Learn more about how to use this hook in the [usage section](usage/react.md).
 
+### useMotor
+```lua
+type ValueType = number | { [string]: number }
+type GoalType = Otter.Goal<any> | { [string]: Otter.Goal<any> }
+
+ReactOtter.useMotor<ValueType, GoalType>(
+	initialValue: ValueType,
+	onStep: (ValueType) -> ()
+	onComplete: nil | (ValueType) -> ()
+): setGoal: (GoalType) -> ()
+```
+A React hook that provides a slightly lower-level interface to an Otter motor. Use this hook in scenarios where a binding is not sufficient for your animation needs.
+
+Learn more about how to use this hook in the [usage section](usage/react.md#usemotor).
+
+!!! warning
+	The `useMotor` hook is an escape hatch designed for handling uncommon use case. In general, you should prefer `useAnimatedBinding` instead.
+
 ### spring
 Re-exports [`Otter.spring`](#otterspring) for easier use within React components.
 
