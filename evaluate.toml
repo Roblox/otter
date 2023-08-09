@@ -1,16 +1,18 @@
 [runner]
-program = "roblox-cli"
-args = "run --load.model ${Project} --run ${Benchmark} --headlessRenderer 1 --fastFlags.overrides \"DebugScriptProfilerEnabled=true\" --lua.globals=__OTTER_MOCK_HEARTBEAT__=true ${Dev} "
-dev = "--lua.globals=__DEV__=true"
+program = "robloxdev-cli"
+args = "run --load.model ${Project} --run ${Benchmark} --headlessRenderer 1 ${Flags} ${Globals} --fastFlags.allOnLuau ${DevArgs}"
+flags = "DebugScriptProfilerEnabled=true"
+globals = "__OTTER_MOCK_HEARTBEAT__=true"
+devArgs = ""
+devFlags = ""
+devGlobals = "__DEV__=true"
 
 [project]
 file-glob = "benchmarks/**/*.lua"
 
 [results]
-output-pattern = "${Total}ms - ${Step}µs"
+output-pattern = "${Metric} ${Value}ms - ${Step}µs"
 
-Total.type = "sum"
+Metric.type = "static"
+Value.type = "sum"
 Step.type = "average"
-
-Total.suffix = "ms"
-Step.suffix = "µs"

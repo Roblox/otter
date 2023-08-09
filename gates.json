@@ -1,0 +1,36 @@
+{
+  "source": {
+    "evaluate": {
+      "legacyRoact classWithBinding Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 7}
+      },
+      "legacyRoact classWithState Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 100}
+      },
+      "react classWithBinding Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 7}
+      },
+      "react classWithState Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 600}
+      },
+      "react functionWithBinding Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 7}
+      },
+      "react functionWithState Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 600}
+      },
+      "react useAnimatedBinding Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 7}
+      },
+      "spring hookWithSpring Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 7}
+      },
+      "spring legacyWithSpring Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 10}
+      },
+      "spring spring Test using Metric Metric": {
+        "Value": { "gate": "above", "value": 2}
+      }
+    }
+  }
+}
