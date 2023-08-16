@@ -14,5 +14,5 @@ file-glob = "benchmarks/**/*.lua"
 output-pattern = "${Metric} ${Value}ms - ${Step}µs"
 
 Metric.type = "static"
-Value.type = "sum"
+Value.type = "average"
 Step.type = "average"
