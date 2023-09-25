@@ -6,7 +6,8 @@
     "paths": [
       "benchmarks/legacyRoact",
       "benchmarks/react",
-      "benchmarks/spring"
+      "benchmarks/spring",
+      "benchmarks/rendering"
     ]
   }
 }

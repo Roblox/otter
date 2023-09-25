@@ -1,35 +1,61 @@
 {
   "source": {
     "evaluate": {
-      "legacyRoact classWithBinding Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 10.524}
+      "legacyRoact-classWithBinding-Metric-Value": {
+        "gate": "below",
+        "value": 18
       },
-      "legacyRoact classWithState Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 101.071}
+      "legacyRoact-classWithState-Metric-Value": {
+        "gate": "below",
+        "value": 170
       },
-      "react classWithBinding Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 10.244}
+      "react-classWithBinding-Metric-Value": {
+        "gate": "below",
+        "value": 16
       },
-      "react classWithState Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 570.713}
+      "react-classWithState-Metric-Value": {
+        "gate": "below",
+        "value": 875
       },
-      "react functionWithBinding Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 9.612}
+      "react-functionWithBinding-Metric-Value": {
+        "gate": "below",
+        "value": 18
       },
-      "react functionWithState Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 615.120}
+      "react-functionWithState-Metric-Value": {
+        "gate": "below",
+        "value": 900
       },
-      "react useAnimatedBinding Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 9.148}
+      "react-useAnimatedBinding-Metric-Value": {
+        "gate": "below",
+        "value": 16
       },
-      "spring hookWithSpring Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 9.237}
+      "spring-hookWithSpring-Metric-Value": {
+        "gate": "below",
+        "value": 18
       },
-      "spring legacyWithSpring Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 10.454}
+      "spring-legacyWithSpring-Metric-Value": {
+        "gate": "below",
+        "value": 20
       },
-      "spring spring Test using Metric Metric": {
-        "Value": { "gate": "above", "value": 4.820}
+      "spring-spring-Metric-Value": {
+        "gate": "below",
+        "value": 8
+      },
+      "rendering-heartbeatResizing-Metric-Value": {
+        "gate": "above",
+        "value": 2300
+      },
+      "rendering-renderSteppedResizing-Metric-Value": {
+        "gate": "above",
+        "value": 2400
+      },
+      "rendering-heartbeatScrolling-Metric-Value": {
+        "gate": "above",
+        "value": 8500
+      },
+      "rendering-renderSteppedScrolling-Metric-Value": {
+        "gate": "above",
+        "value": 10000
       }
     }
   }

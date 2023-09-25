@@ -1,3 +1,7 @@
 {
-    "luau-lsp.sourcemap.rojoProjectFile": "tests.project.json"
+    "luau-lsp.sourcemap.rojoProjectFile": "tests.project.json",
+    "robloxLuauLSP.cli.extraArgs": [
+        "--load.place",
+        "tests.project.json",
+    ],
 }

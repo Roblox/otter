@@ -1,7 +1,7 @@
 [runner]
 program = "robloxdev-cli"
 args = "run --load.model ${Project} --run ${Benchmark} --headlessRenderer 1 ${Flags} ${Globals} --fastFlags.allOnLuau ${DevArgs}"
-flags = "DebugScriptProfilerEnabled=true"
+flags = "DebugScriptProfilerEnabled=true, TaskSchedulerTargetFps=100000"
 globals = "__OTTER_MOCK_HEARTBEAT__=true"
 devArgs = ""
 devFlags = ""
