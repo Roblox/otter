@@ -9,6 +9,8 @@
       "EnableLoadModule=true"
     ]
   },
+  "headlessRenderer": true,
+  "virtualInput": true,
   "lua": {
     "globals": [
       "RTL_SKIP_AUTO_CLEANUP=true",

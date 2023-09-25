@@ -4,5 +4,5 @@ stylua = { source = "Roblox/JohnnyMorganz-StyLua", version = "0.16.0" }
 rotrieve = { source = "Roblox/rotriever", version = "0.5.9" }
 lest = { source = "Roblox/lest", version = "3.x.x" }
 rbx-aged-cli = { source = "Roblox/rbx-aged-tool", version = "5.x.x" }
-evaluate = { source = "Roblox/evaluate", version = "0.3.0" }
-quantqual = { source = "Roblox/quantitative-quality-tools", version = "=0.7.0" }
+evaluate = { source = "Roblox/evaluate", version = "=0.3.1" }
+quantqual = { source = "Roblox/quantitative-quality-tools", version = "=0.8.0" }
