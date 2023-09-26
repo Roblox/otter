@@ -5,7 +5,7 @@ local spring = require(script.spring)
 local instant = require(script.instant)
 local types = require(script.types)
 
-local Heartbeat = require(script.Heartbeat)
+local AnimationStepSignal = require(script.AnimationStepSignal)
 
 export type Goal<T> = types.Goal<T>
 export type Motor<T, U> = types.Motor<T, U>
@@ -22,5 +22,5 @@ return {
 	createSingleMotor = createSingleMotor,
 	spring = spring,
 	instant = instant,
-	__devHeartbeat = Heartbeat,
+	__devAnimationStepSignal = AnimationStepSignal,
 }

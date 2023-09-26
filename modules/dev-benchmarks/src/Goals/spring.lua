@@ -17,10 +17,11 @@ return function()
 
 	motor:setGoal(randomSpringGoal())
 
-	local Heartbeat = Otter.__devHeartbeat
+	local AnimationStepSignal = Otter.__devAnimationStepSignal
+
 	measureAndReport(function()
 		for _ = 1, STEP_COUNT do
-			Heartbeat:Fire()
+			AnimationStepSignal:Fire()
 		end
 	end, STEP_COUNT)
 end

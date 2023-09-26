@@ -5,7 +5,7 @@ local Object = require(Packages.Collections).Object
 local Signal = require(Packages.Signal)
 local createSignal = Signal.createSignal
 
-local Heartbeat = require(script.Parent.Heartbeat)
+local AnimationStepSignal = require(script.Parent.AnimationStepSignal)
 
 local types = require(script.Parent.types)
 type AnimationValue = types.AnimationValue
@@ -84,7 +84,7 @@ function GroupMotor:start()
 		return
 	end
 
-	self.__connection = Heartbeat:Connect(function(dt)
+	self.__connection = AnimationStepSignal:Connect(function(dt)
 		self:step(dt)
 	end)
 

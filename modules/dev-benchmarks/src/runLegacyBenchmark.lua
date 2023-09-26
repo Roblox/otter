@@ -49,11 +49,11 @@ local function runLegacyBenchmark(component)
 		container
 	)
 
-	local Heartbeat = Otter.__devHeartbeat
+	local AnimationStepSignal = Otter.__devAnimationStepSignal
 
 	measureAndReport(function()
 		while not complete do
-			Heartbeat:Fire()
+			AnimationStepSignal:Fire()
 		end
 	end, STEP_COUNT)
 

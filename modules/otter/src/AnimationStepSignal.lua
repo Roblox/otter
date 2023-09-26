@@ -1,10 +1,10 @@
 --!strict
 local RunService = game:GetService("RunService")
 
-local MOCK_HEARTBEAT_DELTA = 1 / 60
+local MOCK_FRAME_DELTA = 1 / 60
 
 local boundCallbacks = {}
-local MockHeartbeat = {
+local MockAnimationStepSignal = {
 	Connect = function(_, callback: (number) -> ())
 		boundCallbacks[callback] = true
 		return {
@@ -22,17 +22,17 @@ local MockHeartbeat = {
 
 return {
 	Connect = function(_, callback): RBXScriptConnection
-		if _G.__OTTER_MOCK_HEARTBEAT__ then
-			return MockHeartbeat:Connect(callback)
+		if _G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ then
+			return MockAnimationStepSignal:Connect(callback)
 		end
 
-		return RunService.Heartbeat:Connect(callback)
+		return RunService.RenderStepped:Connect(callback)
 	end,
 	Fire = function(_, delta: number?)
-		if _G.__OTTER_MOCK_HEARTBEAT__ then
-			MockHeartbeat:Fire(delta or MOCK_HEARTBEAT_DELTA)
+		if _G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ then
+			MockAnimationStepSignal:Fire(delta or MOCK_FRAME_DELTA)
 		else
-			error("Cannot manually fire real Heartbeat")
+			error("Cannot manually fire real animation step signal")
 		end
 	end,
 }

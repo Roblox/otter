@@ -51,10 +51,10 @@ local function runBenchmark(component)
 	-- even on a legacy root, effects still queue up for the next frame
 	task.wait(0)
 
-	local Heartbeat = Otter.__devHeartbeat
+	local AnimationStepSignal = Otter.__devAnimationStepSignal
 	measureAndReport(function()
 		while not complete do
-			Heartbeat:Fire()
+			AnimationStepSignal:Fire()
 		end
 	end, STEP_COUNT)
 

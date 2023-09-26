@@ -1,8 +1,10 @@
 # Otter Version History
 
 ## Unreleased
-* Include benchmarks for spring animations for scrolling and resizing using both RunService.Heartbeat and RunService.RenderStepped. ([#57](https://github.com/Roblox/otter/pull/57))
 
+## 1.1.1
+* Switch from applying updated properties on Heartbeat to applying them on RenderStepped.
+* Include benchmarks for spring animations for scrolling and resizing using both RunService.Heartbeat and RunService.RenderStepped. ([#57](https://github.com/Roblox/otter/pull/57))
 
 ## 1.1.0
 * Add a `useMotor` hook that has a slightly lower-level interface to accommodate special cases around animating non-React Instances ([#51](https://github.com/Roblox/otter/pull/51))
