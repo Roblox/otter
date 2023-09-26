@@ -23,17 +23,17 @@ local function runFPSBenchmark(component, runServiceSignal: RBXScriptSignal, goa
 	-- even on a legacy root, effects still queue up for the next frame
 	task.wait(0)
 
-	local Heartbeat = Otter.__devHeartbeat
+	local AnimationStepSignal = Otter.__devAnimationStepSignal
 	local connection
 	local frameCount = 0
 
-	if _G.__OTTER_MOCK_HEARTBEAT__ then
+	if _G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ then
 		--[[
 			This looks a bit ridiculous, but we need to run benchmarks using the
 			actual RunService implementations.
 		]]
 		connection = runServiceSignal:Connect(function(dt)
-			Heartbeat:Fire(dt)
+			AnimationStepSignal:Fire(dt)
 			frameCount += 1
 		end)
 	end
@@ -44,7 +44,7 @@ local function runFPSBenchmark(component, runServiceSignal: RBXScriptSignal, goa
 	end
 	local endTime = os.clock()
 
-	if _G.__OTTER_MOCK_HEARTBEAT__ then
+	if _G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ then
 		connection:Disconnect()
 	end
 

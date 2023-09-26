@@ -8,7 +8,7 @@ local jest = JestGlobals.jest
 local beforeAll = JestGlobals.beforeAll
 local afterAll = JestGlobals.afterAll
 
-local createSingleMotor, spring, Heartbeat
+local createSingleMotor, spring, AnimationStepSignal
 
 describe("real time", function()
 	beforeAll(function()
@@ -44,15 +44,15 @@ end)
 
 describe("mock timers", function()
 	beforeAll(function()
-		_G.__OTTER_MOCK_HEARTBEAT__ = true
+		_G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ = true
 		jest.resetModules()
 		createSingleMotor = require(script.Parent.Parent.createSingleMotor)
 		spring = require(script.Parent.Parent.spring)
-		Heartbeat = require(script.Parent.Parent.Heartbeat)
+		AnimationStepSignal = require(script.Parent.Parent.AnimationStepSignal)
 	end)
 
 	afterAll(function()
-		_G.__OTTER_MOCK_HEARTBEAT__ = nil
+		_G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ = nil
 		jest.resetModules()
 	end)
 
@@ -73,7 +73,7 @@ describe("mock timers", function()
 		expect(completeSpy).toHaveBeenCalledTimes(0)
 
 		for _ = 1, 120 do
-			Heartbeat:Fire()
+			AnimationStepSignal:Fire()
 		end
 
 		expect(stepSpy).toHaveBeenCalled()

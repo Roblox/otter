@@ -36,12 +36,12 @@ end
 
 local previousFakeTimersValue
 beforeAll(function()
-	previousFakeTimersValue = _G.__OTTER_MOCK_HEARTBEAT__
-	_G.__OTTER_MOCK_HEARTBEAT__ = true
+	previousFakeTimersValue = _G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__
+	_G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ = true
 end)
 
 afterAll(function()
-	_G.__OTTER_MOCK_HEARTBEAT__ = previousFakeTimersValue
+	_G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__ = previousFakeTimersValue
 end)
 
 afterEach(function()
@@ -88,7 +88,7 @@ describe("Single value", function()
 		}))
 
 		for _ = 1, 120 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 
 		expect(onCompleteSpy).toHaveBeenCalled()
@@ -111,7 +111,7 @@ describe("Single value", function()
 		assert(result.getByText("0"))
 
 		for _ = 1, 3 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 
 		expect(stepSpy).toHaveReturnedTimes(3)
@@ -136,7 +136,7 @@ describe("Single value", function()
 		assert(result.getByText("0"))
 
 		for _ = 1, 120 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 		expect(onCompleteSpy).toHaveBeenCalledTimes(1)
 
@@ -150,7 +150,7 @@ describe("Single value", function()
 		}))
 
 		for _ = 1, 120 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 		expect(onCompleteSpy).toHaveBeenCalledTimes(2)
 		assert(result.getByText("-10"))
@@ -170,7 +170,7 @@ describe("Single value", function()
 		assert(result.getByText("10"))
 
 		for _ = 1, 7 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 		expect(onCompleteSpy).never.toHaveBeenCalled()
 
@@ -180,7 +180,7 @@ describe("Single value", function()
 			goal = Otter.instant(99),
 		}))
 
-		Otter.__devHeartbeat:Fire()
+		Otter.__devAnimationStepSignal:Fire()
 		assert(result.getByText("99"))
 		expect(onCompleteSpy).toHaveBeenCalled()
 	end)
@@ -215,7 +215,7 @@ describe("Single value", function()
 		}))
 
 		for _ = 1, 3 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 		assert(result.getByText("1"))
 		expect(onCompleteSpy1).toHaveBeenCalledTimes(1)
@@ -228,7 +228,7 @@ describe("Single value", function()
 		}))
 
 		for _ = 1, 3 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 		assert(result.getByText("20"))
 		expect(onCompleteSpy1).toHaveBeenCalledTimes(1)
@@ -292,7 +292,7 @@ describe("Multiple values", function()
 		}))
 
 		for _ = 1, 120 do
-			Otter.__devHeartbeat:Fire()
+			Otter.__devAnimationStepSignal:Fire()
 		end
 
 		expect(onCompleteSpy).toHaveBeenCalled()
