@@ -5,10 +5,10 @@
 React and Otter can be used together easily with the `ReactOtter` package exported from this repo. Install it instead of (or in addition to) the base Otter package:
 ```toml
 [dependencies]
-ReactOtter = "github.com/roblox/otter@1.0"
+ReactOtter = "github.com/Roblox/otter@1.0"
 
 # You'll only need this if you use Otter directly
-Otter = "github.com/roblox/otter@1.0"
+Otter = "github.com/Roblox/otter@1.0"
 ```
 
 ## useAnimatedBinding

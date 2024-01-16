@@ -10,12 +10,12 @@
 
 ### Model File
 
-- Download the `rbxmx` model file attached to the latest release from the [GitHub releases page](https://github.com/Roblox/otter/releases)
+- Download the `rbxmx` model file attached to the latest release from the [GitHub releases page](https://github.com/Roblox/otter-internal/releases)
 - Insert the model into Studio into a place like `ReplicatedStorage`
 
 ## Documentation
 
-Documentation for Otter is available on [the official documentation website](https://roblox.github.io/otter).
+Documentation for Otter is available on [the official documentation website](https://roblox.github.io/otter-internal).
 
 ## Usage
 

@@ -1,12 +1,12 @@
 <h1 align="center">Otter</h1>
 <div align="center">
-	<a href="https://github.com/Roblox/otter/actions/workflows/ci.yml">
-		<img src="https://github.com/Roblox/otter/actions/workflows/ci.yml/badge.svg" alt="GitHub CI" />
+	<a href="https://github.com/Roblox/otter-internal/actions/workflows/ci.yml">
+		<img src="https://github.com/Roblox/otter-internal/actions/workflows/ci.yml/badge.svg" alt="GitHub CI" />
 	</a>
-	<a href='https://coveralls.io/github/Roblox/otter?branch=main'>
-		<img src='https://coveralls.io/repos/github/Roblox/otter/badge.svg?branch=main&amp;t=r8LIRE' alt='Coverage Status' />
+	<a href='https://coveralls.io/github/Roblox/otter-internal?branch=main'>
+		<img src='https://coveralls.io/repos/github/Roblox/otter-internal/badge.svg?branch=main&amp;t=r8LIRE' alt='Coverage Status' />
 	</a>
-	<a href="https://roblox.github.io/otter">
+	<a href="https://roblox.github.io/otter-internal">
 		<img src="https://img.shields.io/badge/docs-website-green.svg" alt="Documentation" />
 	</a>
 </div>
@@ -19,7 +19,7 @@
 
 ## Running the Storybook
 
-To see the examples [from the docs](https://roblox.github.io/otter/usage/react/) in action, check out the storybook:
+To see the examples [from the docs](https://roblox.github.io/otter-internal/usage/react/) in action, check out the storybook:
 
 1. Make sure you've installed tools (you may need to run `foreman install`)
 2. Run `rotrieve install` to install dependencies
