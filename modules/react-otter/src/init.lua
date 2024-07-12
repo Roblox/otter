@@ -4,10 +4,12 @@ local useMotor = require(script.useMotor)
 
 export type Goal = Otter.Goal<any>
 export type SpringOptions = Otter.SpringOptions
+export type EaseOptions = Otter.EaseOptions
 
 return {
 	useAnimatedBinding = useAnimatedBinding,
 	useMotor = useMotor,
+	ease = Otter.ease,
 	spring = Otter.spring,
 	instant = Otter.instant,
 }
