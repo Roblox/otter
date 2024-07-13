@@ -16,18 +16,6 @@ local testCases = Dash.map(Enum.EasingStyle:GetEnumItems(), function(easingStyle
 end)
 
 describe("Easing functions", function()
-	it("should have all expected APIs", function()
-		expect(ease).toEqual(expect.any("function"))
-
-		local e = ease(1, {
-			duration = 1,
-			easingStyle = Enum.EasingStyle.Linear,
-		})
-
-		expect(e).toEqual(expect.any("table"))
-		expect(e.step).toEqual(expect.any("function"))
-	end)
-
 	it.each(testCases)("should handle easing style $easingStyle", function(args)
 		local easingStyle = args.name
 		local e = ease(1, {
