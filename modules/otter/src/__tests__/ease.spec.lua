@@ -9,15 +9,9 @@ local expect = JestGlobals.expect
 
 local ease = require(script.Parent.Parent.ease)
 
-local testCases = Dash.map(Enum.EasingStyle:GetEnumItems(), function(easingStyle)
-	return {
-		easingStyle = easingStyle
-	}
-end)
-
 describe("Easing functions", function()
-	it.each(testCases)("should handle easing style $easingStyle", function(args)
-		local easingStyle = args.name
+	it.each(Enum.EasingStyle:GetEnumItems())("should handle easing style $Name", function(args)
+		local easingStyle = args.Name
 		local e = ease(1, {
 			duration = 1,
 			easingStyle = easingStyle,
