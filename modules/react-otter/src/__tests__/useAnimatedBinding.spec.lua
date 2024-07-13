@@ -18,6 +18,17 @@ local cleanup = ReactTestingLibrary.cleanup
 
 local useAnimatedBinding = require(script.Parent.Parent.useAnimatedBinding)
 
+local goals = {
+	Spring = Otter.spring(20, {
+		dampingRatio = 1,
+		frequency = 1,
+	}),
+	Ease = Otter.ease(20, {
+		duration = 5,
+		easingStyle = Enum.EasingStyle.Linear,
+	}),
+}
+
 type EmptyGoalState = {}
 local function createStepper(numSteps): Otter.Goal<EmptyGoalState>
 	local stepCount = 0
@@ -156,34 +167,34 @@ describe("Single value", function()
 		assert(result.getByText("-10"))
 	end)
 
-	it("should allow a new goal to be set while the motor is in motion", function()
-		local onCompleteSpy, onCompleteSpyFn = jest.fn()
-		local result = render(React.createElement(AnimateTextValue, {
-			initialValue = 10,
-			onComplete = onCompleteSpyFn,
-			goal = Otter.spring(20, {
-				dampingRatio = 1,
-				frequency = 1,
-			}),
-		}))
+	it.each({ { animationType = "Spring" }, { animationType = "Ease" } })(
+		"should allow a new goal to be set while the motor is in motion to a $animationType goal",
+		function(args)
+			local onCompleteSpy, onCompleteSpyFn = jest.fn()
+			local result = render(React.createElement(AnimateTextValue, {
+				initialValue = 10,
+				onComplete = onCompleteSpyFn,
+				goal = goals[args.animationType],
+			}))
 
-		assert(result.getByText("10"))
+			assert(result.getByText("10"))
 
-		for _ = 1, 7 do
+			for _ = 1, 7 do
+				Otter.__devAnimationStepSignal:Fire()
+			end
+			expect(onCompleteSpy).never.toHaveBeenCalled()
+
+			result.rerender(React.createElement(AnimateTextValue, {
+				initialValue = 10,
+				onComplete = onCompleteSpyFn,
+				goal = Otter.instant(99),
+			}))
+
 			Otter.__devAnimationStepSignal:Fire()
+			assert(result.getByText("99"))
+			expect(onCompleteSpy).toHaveBeenCalled()
 		end
-		expect(onCompleteSpy).never.toHaveBeenCalled()
-
-		result.rerender(React.createElement(AnimateTextValue, {
-			initialValue = 10,
-			onComplete = onCompleteSpyFn,
-			goal = Otter.instant(99),
-		}))
-
-		Otter.__devAnimationStepSignal:Fire()
-		assert(result.getByText("99"))
-		expect(onCompleteSpy).toHaveBeenCalled()
-	end)
+	)
 
 	it("should not recreate the motor on re-render", function()
 		local onCompleteSpy, onCompleteSpyFn = jest.fn()
