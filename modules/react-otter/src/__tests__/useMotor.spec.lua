@@ -31,11 +31,11 @@ local goals = {
 	},
 	Ease = {
 		Otter.ease(20, {
-			duration = 5,
+			duration = 1,
 			easingStyle = Enum.EasingStyle.Linear,
 		}),
 		Otter.ease(-10, {
-			duration = 5,
+			duration = 1,
 			easingStyle = Enum.EasingStyle.Linear,
 		}),
 	},
