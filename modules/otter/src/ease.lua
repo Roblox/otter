@@ -6,6 +6,8 @@
     Inspired by Robert Penner's easing functions.
     Supports Roblox EasingStyle.
 ]]
+local Packages = script.Parent.Parent
+local assign = require(Packages.Collections).Object.assign
 
 local types = require(script.Parent.types)
 type State = types.State
@@ -20,6 +22,8 @@ export type EaseOptions = {
 
 type EaseState = {
 	elapsed: number?,
+	goal: number?,
+	initialValue: number?,
 }
 
 local function linear(t: number): number
@@ -104,10 +108,8 @@ local function ease(goalPosition: number, inputOptions: EaseOptions?): Goal<Ease
 		easingStyle = Enum.EasingStyle.Linear,
 	}
 
-	if inputOptions then
-		for key, value in pairs(inputOptions) do
-			options[key] = value
-		end
+	if inputOptions ~= nil then
+		assign(options, inputOptions)
 	end
 
 	local duration = options.duration
@@ -119,6 +121,13 @@ local function ease(goalPosition: number, inputOptions: EaseOptions?): Goal<Ease
 			then state.initialValue
 			else state.value or 0
 		local elapsed = (state.elapsed or 0) + dt
+
+		-- If the goalPosition changed, update initialValue
+		if state.goal and goalPosition ~= state.goal :: number then
+			p0 = state.value
+			elapsed = 0
+		end
+
 		local t = math.min(elapsed / duration, 1)
 		local easedT = easingFunction(t)
 
@@ -126,13 +135,15 @@ local function ease(goalPosition: number, inputOptions: EaseOptions?): Goal<Ease
 		local complete = elapsed >= duration or p0 == goalPosition
 
 		if complete then
-			p0 = goalPosition
 			p1 = goalPosition
+			-- Set these for accuracy in the next animation
+			p0 = goalPosition
 			elapsed = 0
 		end
 
 		return {
 			initialValue = p0,
+			goal = goalPosition,
 			value = p1,
 			elapsed = elapsed,
 			complete = complete,

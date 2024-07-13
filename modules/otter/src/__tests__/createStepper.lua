@@ -11,6 +11,8 @@ local function createStepper(numSteps: number): Goal
 
 		if stepCount >= numSteps then
 			return {
+				initialValue = state.initialValue,
+				goal = state.goal,
 				value = state.value,
 				velocity = state.velocity,
 				elapsed = state.elapsed,
