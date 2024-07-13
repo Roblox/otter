@@ -56,7 +56,8 @@ local function testEaseFunction(easingStyle)
 	state = e.step(state, 0.5)
 	-- Sine is a little imperfect here
 	expect(state.value).toBeCloseTo(1)
-	expect(state.elapsed).toBe(1)
+	-- Resets to 0 for next run...
+	expect(state.elapsed).toBe(0)
 	expect(state.complete).toBe(true)
 end
 

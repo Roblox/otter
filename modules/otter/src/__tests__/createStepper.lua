@@ -3,7 +3,7 @@ local types = require(script.Parent.Parent.types)
 type Goal = types.Goal
 
 -- test motion object that completes after step has been called numSteps times
-local function createStepper(numSteps): Goal
+local function createStepper(numSteps: number): Goal
 	local stepCount = 0
 
 	local function step(state, _dt)
@@ -13,6 +13,7 @@ local function createStepper(numSteps): Goal
 			return {
 				value = state.value,
 				velocity = state.velocity,
+				elapsed = state.elapsed,
 				complete = true,
 			}
 		end
