@@ -1,0 +1,124 @@
+name: Static Code Analysis
+
+on:
+  push:
+    branches:
+    - main
+
+  pull_request:
+    branches:
+    - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ARTIFACTORY_URL: https://artifactory-edge1.rbx.com/
+  ARTIFACTORY_REPO: generic-rbx-luaapps-local/game-engine
+
+jobs:
+  analyze:
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        engine:
+          - { channel: develop, version: latest, runner: 'robloxdev-cli' }
+          - { channel: stable, version: latest, runner: 'robloxdev-cli' }
+    env:
+      ARTIFACTS_PATH: ../artifacts
+
+    runs-on: [self-hosted, generic-linux]
+    container:
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
+    steps:
+    - name: Prepare git
+      run: |-
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+  
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Generate token for Foreman
+      uses: Roblox-ActionsCache/tibdex-github-app-token@v1
+      id: foreman_token
+      with:
+        app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
+        private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
+        repository: Roblox/rotriever-proxy-index
+
+    - name: Get foreman and run foreman install
+      uses: Roblox/setup-foreman@v3
+      with:
+        token: ${{ steps.foreman_token.outputs.token }}
+
+    - name: Install rotriever packages
+      run: rotrieve install --auth https://NotARealUser:${{ steps.foreman_token.outputs.token }}@github.com
+
+    - name: Check tool versions
+      run: |
+        foreman list
+
+    - name: Lint check
+      run: |
+        selene --config selene.toml modules/
+
+    - name: Code style check
+      run: |
+        stylua -c modules
+    
+    - name: Safe flagging check (use createGetFFlag instead of DefineFastFlag)
+      run: |
+        echo If you fail this check, it means you are using DefineFastFlag directly.
+        echo We avoid this because this library is intended to work in developer places as well as the app and in plugins.
+        echo Instead, use the createGetFFlag module.
+        ! grep -r DefineFastFlag modules/ --exclude=createGetFFlag.lua
+
+    - name: Fetching artifacts
+      shell: bash
+      run: |
+        mkdir ${ARTIFACTS_PATH}
+        rbx-aged-cli download ${{ matrix.engine.runner }} --channel ${{ matrix.engine.channel }} --destination=${ARTIFACTS_PATH}
+      env:
+        AGED_USERNAME: ${{ secrets.ARTI_EDGE_LUAAPPS_USER }}
+        AGED_PASSWORD: ${{ secrets.ARTI_EDGE_LUAAPPS_APIKEY }}
+        AGED_BASE_URL: ${{ env.ARTIFACTORY_URL }}
+        AGED_REPO: ${{ env.ARTIFACTORY_REPO }}
+        AGED_CHANNEL: ${{ matrix.engine.channel }}
+        AGED_VERSION: ${{ matrix.engine.version }}
+
+    - name: Dump fast flags
+      shell: bash
+      run: |
+        ${ARTIFACTS_PATH}/${{ matrix.engine.runner }} dumpflags > flags.json
+        echo flags.json:
+        cat flags.json
+
+    - name: Type check and lint using robloxdev-cli
+      shell: bash
+      run: |
+        echo "Remove .robloxrc from dev dependencies"
+        find Packages/_Index -name "*.robloxrc" | xargs rm -f
+
+        PACKAGES_ABS_PATH=$(realpath Packages)
+
+        ${ARTIFACTS_PATH}/${{ matrix.engine.runner }} version
+        ${ARTIFACTS_PATH}/${{ matrix.engine.runner }} analyze --project default.rbxp \
+          --report.exclude.startsWith $PACKAGES_ABS_PATH/_Index \
+          --report.exclude.startsWith $PACKAGES_ABS_PATH/_Workspace/**/React.lua \
+          --fastFlags.overrides "RBXPUseRunContextInFileSyncService=true"
+
+  code-duplication:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: roblox/setup-pmd-action@v1.0.1
+        with:
+          pmd-version: '6.54.0'
+
+      - name: Copy Paste Detector
+        run: |
+          cpd --skip-lexical-errors --language lua --ignore-literal-sequences --minimum-tokens 621 --dir modules

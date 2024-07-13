@@ -1,0 +1,56 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  ARTIFACTORY_URL: https://artifactory-edge1.rbx.com/
+  ARTIFACTORY_REPO: generic-rbx-luaapps-local/game-engine
+
+jobs:
+  test:
+    runs-on: [self-hosted, generic-linux]
+    container:
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
+    name: tests
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate token for Foreman
+        uses: Roblox-ActionsCache/tibdex-github-app-token@v1
+        id: foreman_token
+        with:
+          app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
+          private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
+          repository: Roblox/rotriever-proxy-index
+
+      - name: Get foreman and run foreman install
+        uses: Roblox/setup-foreman@v3
+        with:
+          token: ${{ steps.foreman_token.outputs.token }}
+
+      - name: Install rotriever packages
+        run: rotrieve install --auth https://NotARealUser:${{ steps.foreman_token.outputs.token }}@github.com
+
+      - name: Check tool versions
+        run: foreman list
+
+      - name: Run Tests
+        run: lest --verbose -- --output.error.stream=stdout --output.warning.stream=stdout --output.message.stream=stdout
+        shell: bash
+        env:
+          LEST_ARTIFACTORY_URL: ${{ env.ARTIFACTORY_URL }}
+          LEST_ARTIFACTORY_REPO: ${{ env.ARTIFACTORY_REPO }}
+          LEST_USERNAME: ${{ secrets.ARTI_EDGE_LUAAPPS_USER }}
+          LEST_PASSWORD: ${{ secrets.ARTI_EDGE_LUAAPPS_APIKEY }}
+          LEST_RERUN: "0"
+          LEST_WAIT_UPDATE: "true"
+          LEST_UPDATE: "false" # no background downloads of the latest version
+          LEST_UPDATE_CHANNEL: develop
+          LEST_UPDATE_VERSION: latest
+          LEST_TEST_RUNNER: robloxdev-cli

@@ -1,0 +1,17 @@
+{
+	"fileVersion": "1",
+	"luau": {
+		"languageMode": "strict"
+	},
+	"instanceHierarchy": {
+		"name": "Otter",
+		"tree": {
+            "$className": "DataModel",
+            "ReplicatedStorage": {
+                "Packages": {
+                    "$path": "Packages",
+                },
+            },
+		}
+	}
+}
