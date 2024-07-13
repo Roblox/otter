@@ -79,21 +79,10 @@ The default ease configuration parameters.
 type EaseOptions = {
 	-- The duration of the animation. Defaults to 1.
 	duration: number?
-	-- The easing style of the animation. Defaults to Enum.EasingStyle.Linear
-	dampingRatio: number?
+	-- The easing style of the animation. Defaults to Enum.EasingStyle.Linear.
+	easingStyle: Enum.EasingStyle?
 }
 ```
-
-Supported `EasingStyle`s are
-- Enum.EasingStyle.Linear
-- Enum.EasingStyle.Quad
-- Enum.EasingStyle.Cubic
-- Enum.EasingStyle.Quart
-- Enum.EasingStyle.Quint
-- Enum.EasingStyle.Sine
-- Enum.EasingStyle.Bounce
-- Enum.EasingStyle.Back
-- Enum.EasingStyle.Elastic
 
 ### Otter.spring
 ```lua

@@ -11,5 +11,6 @@ Collections = "github.com/roblox/luau-polyfill@1.2.2"
 Signal = "github.com/roblox/signal-lua@1.0"
 
 [dev_dependencies]
+Dash = "github.com/roblox/dash@0.1.0"
 Jest = "github.com/Roblox/jest-roblox@3.2.5"
 JestGlobals = "github.com/Roblox/jest-roblox@3.2.5"
