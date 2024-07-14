@@ -39,13 +39,19 @@ local function ToggleTextSize(easingStyle: Enum.EasingStyle)
 				local t1 = math.max(OFFSET, percentage - OFFSET)
 				local t2 = percentage
 				print(0, t1, t2, 1)
-		
-				return NumberSequence.new({
+
+				local keypoints = {
 					NumberSequenceKeypoint.new(0, 0),
 					NumberSequenceKeypoint.new(t1, 0),
 					NumberSequenceKeypoint.new(t2, PROGRESS_TRANSPARENCY),
 					NumberSequenceKeypoint.new(1, PROGRESS_TRANSPARENCY),
-				})
+				}
+
+				table.sort(keypoints, function(a, b)
+					return a.Time < b.Time
+				end)
+		
+				return NumberSequence.new(keypoints)
 			end),
 		})
 	})
