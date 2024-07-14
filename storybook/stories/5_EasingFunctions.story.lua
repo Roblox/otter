@@ -48,7 +48,7 @@ local function ToggleTextSize(easingStyle: Enum.EasingStyle)
 			Indicator = React.createElement("Frame", {
 				BackgroundColor3 = Color3.fromRGB(199, 130, 255),
 				BorderSizePixel = 0,
-				Size = UDim2.fromOffset(10, 10),
+				Size = UDim2.fromOffset(14, 14),
 				Position = value:map(function(percentage: number)
 					return UDim2.new(percentage, 0, 0.5, 0)
 				end),
