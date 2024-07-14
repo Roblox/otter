@@ -3,9 +3,6 @@ local ReactOtter = require(Packages._Workspace.ReactOtter.ReactOtter)
 local React = require(Packages._Workspace.ReactOtter.React)
 local Dash = require(Packages._Workspace.ReactOtter.Dash)
 
-local PROGRESS_TRANSPARENCY = 0.5
-local OFFSET = 0.0001
-
 local function ToggleTextSize(easingStyle: Enum.EasingStyle)
 	local toggled, setToggled = React.useState(false)
 	local value, setGoal = ReactOtter.useAnimatedBinding(0, function(value: number)
@@ -19,41 +16,50 @@ local function ToggleTextSize(easingStyle: Enum.EasingStyle)
 		}))
 	end, { toggled })
 
-	return React.createElement("TextButton", {
-		Text = easingStyle.Name,
-		TextSize = 22,
-		Size = UDim2.new(0, 200, 0, 50),
-		BackgroundColor3 = Color3.fromRGB(13, 160, 160),
-		[React.Event.Activated] = function()
-			setToggled(not toggled)
-		end,
+	return React.createElement("Frame", {
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		AutomaticSize = Enum.AutomaticSize.XY,
 	}, {
-		React.createElement("UIGradient", {
-			Transparency = value:map(function(percentage: number)
-				if percentage == 1 then
-					return NumberSequence.new(0)
-				elseif percentage == 0 then
-					return NumberSequence.new(0.5)
-				end
-
-				local t1 = math.max(OFFSET, percentage - OFFSET)
-				local t2 = percentage
-				print(0, t1, t2, 1)
-
-				local keypoints = {
-					NumberSequenceKeypoint.new(0, 0),
-					NumberSequenceKeypoint.new(t1, 0),
-					NumberSequenceKeypoint.new(t2, PROGRESS_TRANSPARENCY),
-					NumberSequenceKeypoint.new(1, PROGRESS_TRANSPARENCY),
-				}
-
-				table.sort(keypoints, function(a, b)
-					return a.Time < b.Time
-				end)
-		
-				return NumberSequence.new(keypoints)
-			end),
-		})
+		Padding = React.createElement("UIPadding", {
+			PaddingLeft = UDim.new(0, 20),
+			PaddingRight = UDim.new(0, 20),
+		}),
+		ListLayout = React.createElement("UIListLayout", {
+			FillDirection = Enum.FillDirection.Vertical,
+			SortOrder = Enum.SortOrder.LayoutOrder,
+			Padding = UDim.new(0, 10),
+		}),
+		Label = React.createElement("TextButton", {
+			Text = easingStyle.Name,
+			TextSize = 18,
+			Size = UDim2.new(0, 200, 0, 50),
+			BackgroundColor3 = Color3.fromRGB(13, 160, 160),
+			[React.Event.Activated] = function()
+				setToggled(not toggled)
+			end,
+			LayoutOrder = 1,
+		}),
+		Progress = React.createElement("Frame", {
+			Size = UDim2.new(0, 200, 0, 5),
+			BackgroundColor3 = Color3.fromRGB(107, 69, 245),
+			LayoutOrder = 2,
+		}, {
+			Indicator = React.createElement("Frame", {
+				BackgroundColor3 = Color3.fromRGB(199, 130, 255),
+				BorderSizePixel = 0,
+				Size = UDim2.fromOffset(10, 10),
+				Position = value:map(function(percentage: number)
+					return UDim2.new(percentage, 0, 0.5, 0)
+				end),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				ZIndex = 2,
+			}, {
+				Corner = React.createElement("UICorner", {
+					CornerRadius = UDim.new(1, 0),
+				}),
+			}),
+		}),
 	})
 end
 
