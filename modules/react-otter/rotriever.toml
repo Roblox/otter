@@ -9,9 +9,10 @@ files = ["*", "!*.spec.lua", "!**/__tests__/**"]
 [dependencies]
 Otter = { path = "../otter" }
 React = "github.com/roblox/roact-alignment@17.0.1-rc.19"
+Dash = "github.com/roblox/dash@0.1.0"
 
 [dev_dependencies]
-ReactTestingLibrary = "github.com/roblox/react-testing-library-lua@12.1.5"
+ReactTestingLibrary = "github.com/roblox/react-testing-library-lua@12.2.3"
 Jest = "github.com/Roblox/jest-roblox@3.2.5"
 JestGlobals = "github.com/Roblox/jest-roblox@3.2.5"
 

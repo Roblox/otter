@@ -10,7 +10,7 @@ content_root = "src"
 Otter = { path = "../otter" }
 ReactOtter = { path = "../react-otter" }
 
-LegacyRoact = "github.com/roblox/roact@1.0"
+Roact = "github.com/roblox/roact@1.4.3"
 
 React = "github.com/roblox/roact-alignment@17.0.1-rc.18"
 ReactRoblox = "github.com/roblox/roact-alignment@17.0.1-rc.18"

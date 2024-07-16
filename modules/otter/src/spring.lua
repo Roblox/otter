@@ -96,7 +96,7 @@ local function spring(goalPosition: number, inputOptions: SpringOptions?): Goal<
 	assert(velLimit >= 0, "Expected restingVelocityLimit >= 0")
 	assert(posLimit >= 0, "Expected restingPositionLimit >= 0")
 
-	local function step(state: State & SpringState, dt): State & SpringState
+	local function step(state: State & SpringState, dt: number): State & SpringState
 		-- Advance the spring simulation by dt seconds.
 		-- Take the damped harmonic oscillator ODE:
 		--    f^2*(X[t] - g) + 2*d*f*X'[t] + X''[t] = 0

@@ -18,6 +18,33 @@ local cleanup = ReactTestingLibrary.cleanup
 
 local useMotor = require(script.Parent.Parent.useMotor)
 
+type AnimationType = "Spring" | "Ease"
+type AnimationTypes = { { animationType: AnimationType } }
+local AnimationTypes: AnimationTypes = { { animationType = "Spring" }, { animationType = "Ease" } }
+
+local goals = {
+	Spring = {
+		Otter.spring(20, {
+			dampingRatio = 1,
+			frequency = 3,
+		}),
+		Otter.spring(-10, {
+			dampingRatio = 1,
+			frequency = 3,
+		}),
+	},
+	Ease = {
+		Otter.ease(20, {
+			duration = 1,
+			easingStyle = Enum.EasingStyle.Linear,
+		}),
+		Otter.ease(-10, {
+			duration = 1,
+			easingStyle = Enum.EasingStyle.Linear,
+		}),
+	},
+}
+
 local previousFakeTimersValue
 beforeAll(function()
 	previousFakeTimersValue = _G.__OTTER_MOCK_ANIMATION_STEP_SIGNAL__
@@ -83,47 +110,45 @@ describe("Single value", function()
 		end
 
 		expect(onCompleteSpy).toHaveBeenCalled()
-	end)
+	end);
 
-	it("should re-start the motor when a new goal is called", function()
-		local onCompleteSpy, onCompleteSpyFn = jest.fn()
-		local onStepSpy, onStepSpyFn = jest.fn()
-		local result = render(React.createElement(Motor, {
-			initialValue = 0,
-			onComplete = onCompleteSpyFn,
-			onStep = onStepSpyFn,
-			goal = Otter.spring(10, {
-				dampingRatio = 1,
-				frequency = 3,
-			}),
-		}))
+	(it.each :: (AnimationTypes) -> (string, any) -> ())(AnimationTypes)(
+		"should re-start the motor when a new goal is called for an animation $animationType",
+		function(args)
+			local onCompleteSpy, onCompleteSpyFn = jest.fn()
+			local onStepSpy, onStepSpyFn = jest.fn()
+			local animations = goals[args.animationType]
+			local result = render(React.createElement(Motor, {
+				initialValue = 0,
+				onComplete = onCompleteSpyFn,
+				onStep = onStepSpyFn,
+				goal = animations[1],
+			}))
 
-		expect(onCompleteSpy).never.toHaveBeenCalled()
+			expect(onCompleteSpy).never.toHaveBeenCalled()
 
-		for _ = 1, 120 do
-			Otter.__devAnimationStepSignal:Fire()
+			for _ = 1, 120 do
+				Otter.__devAnimationStepSignal:Fire()
+			end
+			expect(onCompleteSpy).toHaveBeenCalledTimes(1)
+			expect(onStepSpy).toHaveBeenCalled()
+
+			local steps = #onStepSpy.mock.calls
+
+			result.rerender(React.createElement(Motor, {
+				initialValue = 0,
+				onComplete = onCompleteSpyFn,
+				onStep = onStepSpyFn,
+				goal = animations[2],
+			}))
+
+			for _ = 1, 120 do
+				Otter.__devAnimationStepSignal:Fire()
+			end
+			expect(onCompleteSpy).toHaveBeenCalledTimes(2)
+			expect(#onStepSpy.mock.calls).toBeGreaterThan(steps)
 		end
-		expect(onCompleteSpy).toHaveBeenCalledTimes(1)
-		expect(onStepSpy).toHaveBeenCalled()
-
-		local steps = #onStepSpy.mock.calls
-
-		result.rerender(React.createElement(Motor, {
-			initialValue = 0,
-			onComplete = onCompleteSpyFn,
-			onStep = onStepSpyFn,
-			goal = Otter.spring(-10, {
-				dampingRatio = 1,
-				frequency = 3,
-			}),
-		}))
-
-		for _ = 1, 120 do
-			Otter.__devAnimationStepSignal:Fire()
-		end
-		expect(onCompleteSpy).toHaveBeenCalledTimes(2)
-		expect(#onStepSpy.mock.calls).toBeGreaterThan(steps)
-	end)
+	)
 
 	it("should not recreate the motor on re-render", function()
 		local captureSetGoal = jest.fn()
