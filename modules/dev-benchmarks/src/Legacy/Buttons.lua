@@ -1,6 +1,6 @@
 --!strict
 local Packages = script.Parent.Parent.Parent
-local Roact = require(Packages.LegacyRoact)
+local Roact = require(Packages.Roact)
 
 local function Buttons(_)
 	return Roact.createFragment({

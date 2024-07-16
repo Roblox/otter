@@ -1,8 +1,9 @@
 [tools]
 selene = { source = "Roblox/Kampfkarren-selene", version = "0.24.0" }
 stylua = { source = "Roblox/JohnnyMorganz-StyLua", version = "0.16.0" }
-rotrieve = { source = "Roblox/rotriever", version = "0.5.9" }
+rotrieve = { source = "roblox/rotriever", version = "0.5.13-alpha.4" }
 lest = { source = "Roblox/lest", version = "3.x.x" }
+rojo = { source = "Roblox/rojo-rbx-rojo", version = "7.2.1" }
 rbx-aged-cli = { source = "Roblox/rbx-aged-tool", version = "5.x.x" }
 evaluate = { source = "Roblox/evaluate", version = "=0.3.1" }
 quantqual = { source = "Roblox/quantitative-quality-tools", version = "=0.8.0" }

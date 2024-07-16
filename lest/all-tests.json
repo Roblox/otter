@@ -1,7 +1,7 @@
 {
   "run": "$configDir/../scripts/run-tests.lua",
   "load": {
-    "model": "$configDir/../tests.project.json",
+    "model": "$configDir/../default.project.json",
     "asRobloxScript": true
   },
   "fastFlags": {

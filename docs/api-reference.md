@@ -39,6 +39,9 @@ Learn more about how to use this hook in the [usage section](usage/react.md#usem
 !!! warning
 	The `useMotor` hook is an escape hatch designed for handling uncommon use case. In general, you should prefer `useAnimatedBinding` instead.
 
+### ease
+Re-exports [`Otter.ease`](#otterease) for easier use within React components.
+
 ### spring
 Re-exports [`Otter.spring`](#otterspring) for easier use within React components.
 
@@ -60,6 +63,26 @@ Otter.createGroupMotor(initialValues: { string: number }): Otter.GroupMotor
 ```
 
 Constructs a motor that controls a group of values.
+
+### Otter.ease
+```lua
+Otter.ease(targetValue: number, config: Config?): Otter.Goal<EaseState>
+```
+
+Constructs a goal that uses easing options to transition to the target value. The `config` argument is an optional table of ease configuration data.
+
+#### EaseOptions
+
+The default ease configuration parameters.
+
+```lua
+type EaseOptions = {
+	-- The duration of the animation, in seconds. Defaults to 1.
+	duration: number?
+	-- The easing style of the animation. Defaults to Enum.EasingStyle.Linear.
+	easingStyle: Enum.EasingStyle?
+}
+```
 
 ### Otter.spring
 ```lua

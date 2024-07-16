@@ -1,7 +1,7 @@
 --!strict
 local Packages = script.Parent.Parent.Parent
 local Otter = require(Packages.Otter)
-local Roact = require(Packages.LegacyRoact)
+local Roact = require(Packages.Roact)
 
 local Buttons = require(script.Parent.Buttons)
 

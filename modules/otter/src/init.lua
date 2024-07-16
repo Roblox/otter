@@ -1,6 +1,7 @@
 --!strict
 local createGroupMotor = require(script.createGroupMotor)
 local createSingleMotor = require(script.createSingleMotor)
+local ease = require(script.ease)
 local spring = require(script.spring)
 local instant = require(script.instant)
 local types = require(script.types)
@@ -16,10 +17,12 @@ export type SingleMotor = createSingleMotor.SingleMotor
 export type GroupMotor = createGroupMotor.GroupMotor
 
 export type SpringOptions = spring.SpringOptions
+export type EaseOptions = ease.EaseOptions
 
 return {
 	createGroupMotor = createGroupMotor,
 	createSingleMotor = createSingleMotor,
+	ease = ease,
 	spring = spring,
 	instant = instant,
 	__devAnimationStepSignal = AnimationStepSignal,
