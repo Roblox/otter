@@ -6,6 +6,9 @@ license = "MIT"
 content_root = "src"
 files = ["*", "!*.spec.lua", "!**/__tests__/**"]
 
+[config]
+registry_index = true
+
 [dependencies]
 Collections = "github.com/roblox/luau-polyfill@1.2.2"
 Signal = "github.com/roblox/signal-lua@1.0"
