@@ -105,6 +105,62 @@ describe("cubicBezier", function()
 			expect(state.complete).toBe(true)
 		end)
 
+		it("should handle only duration", function()
+			local e = ease(1, {
+				duration = 4,
+			})
+
+			local state = {
+				value = 0,
+				elapsed = 0,
+				complete = false,
+			}
+
+			-- Test initial state
+			expect(state.value).toBe(0)
+
+			-- Test midway through animation
+			state = e.step(state, 2)
+			expect(state.value).toBeGreaterThan(0)
+			expect(state.value).toBeLessThan(1)
+			expect(state.elapsed).toBe(2)
+			expect(state.complete).toBe(false)
+
+			-- Test completion
+			state = e.step(state, 2)
+			expect(state.value).toBeCloseTo(1)
+			expect(state.elapsed).toBe(0)
+			expect(state.complete).toBe(true)
+		end)
+
+		it("should handle only easingStyle", function()
+			local e = ease(1, {
+				easingStyle = Enum.EasingStyle.Exponential,
+			})
+
+			local state = {
+				value = 0,
+				elapsed = 0,
+				complete = false,
+			}
+
+			-- Test initial state
+			expect(state.value).toBe(0)
+
+			-- Test midway through animation
+			state = e.step(state, 0.5)
+			expect(state.value).toBeGreaterThan(0)
+			expect(state.value).toBeLessThan(1)
+			expect(state.elapsed).toBe(0.5)
+			expect(state.complete).toBe(false)
+
+			-- Test completion
+			state = e.step(state, 0.5)
+			expect(state.value).toBeCloseTo(1)
+			expect(state.elapsed).toBe(0)
+			expect(state.complete).toBe(true)
+		end)
+
 		it("should handle zero duration", function()
 			local e = ease(1, {
 				duration = 0,
