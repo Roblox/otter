@@ -6,9 +6,6 @@
     Inspired by Robert Penner's easing functions.
     Supports Roblox EasingStyle.
 ]]
-local Packages = script.Parent.Parent
-local assign = require(Packages.Collections).Object.assign
-
 local types = require(script.Parent.types)
 type State = types.State
 type Goal<T> = types.Goal<T>
@@ -16,8 +13,10 @@ type Goal<T> = types.Goal<T>
 export type EasingStyle = Enum.EasingStyle | { number }
 
 export type EaseOptions = {
-	duration: number,
-	easingStyle: EasingStyle,
+	-- Defaults to 1
+	duration: number?,
+	-- Defaults to Enum.EasingStyle.Linear
+	easingStyle: EasingStyle?,
 }
 
 type EaseState = {
@@ -161,17 +160,11 @@ local easingFunctions = {
 }
 
 local function ease(goalPosition: number, inputOptions: EaseOptions?): Goal<EaseState>
-	local options: EaseOptions = {
-		duration = 1,
-		easingStyle = Enum.EasingStyle.Linear,
-	}
+	local duration = if inputOptions and inputOptions.duration then inputOptions.duration else 1
+	local easingStyle = if inputOptions and inputOptions.easingStyle
+		then inputOptions.easingStyle
+		else Enum.EasingStyle.Linear
 
-	if inputOptions ~= nil then
-		assign(options, inputOptions)
-	end
-
-	local duration = options.duration
-	local easingStyle = options.easingStyle
 	local easingFunction: (number, Enum.EasingStyle | { number }) -> number = if typeof(easingStyle) == "EnumItem"
 			or typeof(easingStyle) == "string"
 		then easingFunctions[easingStyle]
