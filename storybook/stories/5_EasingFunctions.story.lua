@@ -1,12 +1,11 @@
 local Packages = script.Parent.Parent.Parent
 local ReactOtter = require(Packages._Workspace.ReactOtter.ReactOtter)
 local React = require(Packages._Workspace.ReactOtter.React)
-local Dash = require(Packages._Workspace.ReactOtter.Dash)
 
 local function EasingFunction(easingStyle: Enum.EasingStyle)
 	local toggled, setToggled = React.useState(false)
 	local value, setGoal = ReactOtter.useAnimatedBinding(0, function(value: number)
-		-- print("Completed animation!", easingStyle)
+	-- print("Completed animation!", easingStyle)
 	end)
 
 	React.useEffect(function()
@@ -61,15 +60,18 @@ local function EasingFunction(easingStyle: Enum.EasingStyle)
 	})
 end
 
+local stories = {}
+for _, easingStyle in Enum.EasingStyle:GetEnumItems() do
+	table.insert(stories, {
+		name = easingStyle.Name,
+		story = function(props)
+			return EasingFunction(easingStyle)
+		end,
+	})
+end
+
 return {
 	name = "Easing Functions",
 	summary = "A frame that animates the background in based on a particular easing style when clicked",
-	stories = Dash.map(Enum.EasingStyle:GetEnumItems(), function(easingStyle)
-		return {
-			name = easingStyle.Name,
-			story = function(props)
-				return EasingFunction(easingStyle)
-			end,
-		}
-	end),
+	stories = stories,
 }
