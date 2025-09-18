@@ -3,7 +3,7 @@ local types = require(script.Parent.Parent.types)
 type Goal = types.Goal
 
 -- test motion object that completes after step has been called numSteps times
-local function createStepper(numSteps: number): Goal
+local function createStepper(numSteps: number, startingValue: number?): Goal
 	local stepCount = 0
 
 	local function step(state, _dt)
@@ -25,9 +25,12 @@ local function createStepper(numSteps: number): Goal
 
 	return setmetatable({
 		step = step,
+		startingValue = startingValue,
 	}, {
 		__index = function(_, key)
-			error(("%q is not a valid member of stepper"):format(key))
+			if key ~= "startingValue" then
+				error(("%q is not a valid member of stepper"):format(key))
+			end
 		end,
 	}) :: any
 end

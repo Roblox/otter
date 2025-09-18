@@ -34,7 +34,7 @@ local goals = {
 }
 
 type EmptyGoalState = {}
-local function createStepper(numSteps): Otter.Goal<EmptyGoalState>
+local function createStepper(numSteps, startingValue: number?): Otter.Goal<EmptyGoalState>
 	local stepCount = 0
 
 	return {
@@ -46,6 +46,7 @@ local function createStepper(numSteps): Otter.Goal<EmptyGoalState>
 				complete = stepCount >= numSteps,
 			}
 		end,
+		startingValue = startingValue,
 	}
 end
 
@@ -248,6 +249,32 @@ describe("Single value", function()
 		assert(result.getByText("20"))
 		expect(onCompleteSpy1).toHaveBeenCalledTimes(1)
 		expect(onCompleteSpy2).toHaveBeenCalledTimes(1)
+	end)
+
+	-- when starting value is passed, the motor drives from starting value, without having to reset the binding elsewhere in the component
+	-- that is, it starts the animation at the given starting value
+	it("should respect goal starting value", function()
+		local startingValue = 17 -- explicit starting value
+		local goal = createStepper(1, startingValue)
+		local animationStartValue = nil -- on first step, populate this value to check if startingValue works as intended
+		goal.step = function(_state: any, _dt)
+			if not animationStartValue then
+				animationStartValue = _state.value
+			end
+			return {
+				value = _state.value,
+				complete = true,
+			}
+		end
+		local _result = render(React.createElement(AnimateTextValue, {
+			initialValue = 0,
+			onComplete = function()
+				return
+			end,
+			goal = goal,
+		}))
+		Otter.__devAnimationStepSignal:Fire()
+		expect(animationStartValue).toEqual(startingValue)
 	end)
 end)
 

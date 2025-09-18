@@ -10,6 +10,7 @@ local function instant(targetValue): Goal
 				complete = true,
 			}
 		end,
+		startingValue = targetValue,
 	}
 end
 

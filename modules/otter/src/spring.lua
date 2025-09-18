@@ -12,9 +12,7 @@ local types = require(script.Parent.types)
 type State = types.State
 type Goal<T> = types.Goal<T>
 
-type SpringState = {
-	velocity: number?,
-}
+type SpringState = types.SpringState
 
 type SpringLimits = {
 	restingVelocityLimit: number?,
@@ -41,7 +39,7 @@ type LegacySpringOptions = SpringLimits & {
 	damping: nil,
 }
 
-export type SpringOptions = LegacySpringOptions | FigmaSpringOptions
+export type SpringOptions = (LegacySpringOptions | FigmaSpringOptions) & types.DefaultGoalOptions
 
 local pi = math.pi
 local abs = math.abs
@@ -188,6 +186,7 @@ local function spring(goalPosition: number, inputOptions: SpringOptions?): Goal<
 
 	return {
 		step = step,
+		startingValue = if inputOptions then inputOptions.startingValue else nil,
 	}
 end
 

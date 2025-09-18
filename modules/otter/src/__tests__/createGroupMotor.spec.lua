@@ -63,6 +63,15 @@ describe("setGoal", function()
 
 		motor:destroy()
 	end)
+
+	it("should respect goal's startingValue", function()
+		local startingValue = 1
+		local motor = createGroupMotor({
+			x = 0,
+		})
+		motor:setGoal({ x = createStepper(1, startingValue) })
+		expect((motor :: any).__states.x.value).toEqual(startingValue)
+	end)
 end)
 
 describe("onComplete should be called when", function()
