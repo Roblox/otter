@@ -176,7 +176,7 @@ describe("Single value", function()
 		local result = render(React.createElement(Motor, {
 			initialValue = 0,
 			onStep = onStepSpyFn1,
-			goal = Otter.instant(1),
+			goal = Otter.ease(1),
 		}))
 
 		Otter.__devAnimationStepSignal:Fire()
@@ -186,7 +186,7 @@ describe("Single value", function()
 		result.rerender(React.createElement(Motor, {
 			initialValue = 0,
 			onStep = onStepSpyFn2,
-			goal = Otter.instant(20),
+			goal = Otter.ease(20),
 		}))
 
 		Otter.__devAnimationStepSignal:Fire()

@@ -10,7 +10,7 @@ local AnimationStepSignal = require(script.Parent.AnimationStepSignal)
 local types = require(script.Parent.types)
 type AnimationValue = types.AnimationValue
 type Goal<T> = types.Goal<T>
-type State = types.State
+type State = types.State & types.EaseState & types.SpringState
 type Motor<T, U> = types.Motor<T, U>
 
 type Unsubscribe = types.Unsubscribe
@@ -146,14 +146,28 @@ end
 function GroupMotor:setGoal(goals: GoalGroup)
 	self.__goals = Object.assign({}, self.__goals, goals)
 
-	for key in pairs(goals) do
+	local hasStartingValue = false
+	local values = {}
+	for key, goal in pairs(goals) do
 		local state = self.__states[key]
+		if goal.startingValue then
+			hasStartingValue = true
+			state.value = goal.startingValue
+			if state.initialValue then
+				state.initialValue = goal.startingValue
+			end
+		end
+		values[key] = state.value
 
 		if state == nil then
 			error(("Cannot set goal for the value %s because it doesn't exist"):format(tostring(key)), 2)
 		end
 
 		state.complete = false
+	end
+
+	if hasStartingValue then
+		self.__fireOnStep(values)
 	end
 
 	self.__allComplete = false

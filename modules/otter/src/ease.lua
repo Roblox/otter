@@ -17,13 +17,9 @@ export type EaseOptions = {
 	duration: number?,
 	-- Defaults to Enum.EasingStyle.Linear
 	easingStyle: EasingStyle?,
-}
+} & types.DefaultGoalOptions
 
-type EaseState = {
-	elapsed: number?,
-	goal: number?,
-	initialValue: number?,
-}
+type EaseState = types.EaseState
 
 local function linear(t: number, _s: EasingStyle): number
 	return t
@@ -204,6 +200,7 @@ local function ease(goalPosition: number, inputOptions: EaseOptions?): Goal<Ease
 
 	return {
 		step = step,
+		startingValue = if inputOptions then inputOptions.startingValue else nil,
 	}
 end
 

@@ -6,7 +6,22 @@ export type Unsubscribe = () -> ()
 -- probably just numbers, but one could imagine something more sophisticated
 export type AnimationValue = number
 
+export type DefaultGoalOptions = {
+	startingValue: AnimationValue?,
+}
+
 type Empty = {}
+
+export type EaseState = {
+	elapsed: AnimationValue?,
+	goal: AnimationValue?,
+	initialValue: AnimationValue?,
+}
+
+export type SpringState = {
+	velocity: AnimationValue?,
+}
+
 export type State = {
 	value: AnimationValue,
 	complete: boolean,
@@ -14,6 +29,7 @@ export type State = {
 
 export type Goal<T = Empty> = {
 	step: (state: State & T, dt: number) -> State & T,
+	startingValue: AnimationValue?,
 }
 
 export type Motor<T, U> = {
