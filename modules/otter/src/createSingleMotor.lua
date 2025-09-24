@@ -65,19 +65,19 @@ function SingleMotor:start()
 		return
 	end
 
-	if self.__goal and self.__goal.startingValue then
-		self.__state.value = self.__goal.startingValue
-		if self.__state.initialValue then
-			self.__state.initialValue = self.__goal.startingValue
-		end
-		self.__fireOnStep(self.__state.value)
-	end
-
 	self.__connection = AnimationStepSignal:Connect(function(dt)
 		self:step(dt)
 	end)
 
 	self.__running = true
+
+	if self.__goal and self.__goal.startingValue then
+		self.__state.value = self.__goal.startingValue
+		if self.__state.initialValue then
+			self.__state.initialValue = self.__goal.startingValue
+		end
+		self:step(0)
+	end
 end
 
 function SingleMotor:stop()

@@ -36,7 +36,7 @@ type GroupMotorInternal = {
 	__running: boolean,
 	__connection: RBXScriptConnection?,
 
-	start: (self: GroupMotorInternal) -> (),
+	start: (self: GroupMotorInternal, hasStartingValue: boolean) -> (),
 	stop: (self: GroupMotorInternal) -> (),
 	step: (self: GroupMotorInternal, dt: number) -> (),
 	setGoal: (self: GroupMotorInternal, goal: GoalGroup) -> (),
@@ -79,7 +79,7 @@ local function createGroupMotor(initialValues: ValueGroup): GroupMotor
 	return self :: any
 end
 
-function GroupMotor:start()
+function GroupMotor:start(hasStartingValue: boolean)
 	if self.__running then
 		return
 	end
@@ -89,6 +89,10 @@ function GroupMotor:start()
 	end)
 
 	self.__running = true
+
+	if hasStartingValue then
+		self:step(0)
+	end
 end
 
 function GroupMotor:stop()
@@ -166,12 +170,8 @@ function GroupMotor:setGoal(goals: GoalGroup)
 		state.complete = false
 	end
 
-	if hasStartingValue then
-		self.__fireOnStep(values)
-	end
-
 	self.__allComplete = false
-	self:start()
+	self:start(hasStartingValue)
 end
 
 function GroupMotor:onStep(callback: MotorCallback<ValueGroup>)
