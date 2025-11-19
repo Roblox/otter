@@ -2,6 +2,7 @@
 local Packages = script.Parent.Parent.Parent
 local Otter = require(Packages.Otter)
 local React = require(Packages.React)
+local SafeFlags = require(Packages.SafeFlags)
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local it = JestGlobals.it
@@ -21,6 +22,8 @@ local useMotor = require(script.Parent.Parent.useMotor)
 type AnimationType = "Spring" | "Ease"
 type AnimationTypes = { { animationType: AnimationType } }
 local AnimationTypes: AnimationTypes = { { animationType = "Spring" }, { animationType = "Ease" } }
+
+local FFlagOtterConnectMotorSignalsInLayoutEffect = SafeFlags.createGetFFlag("OtterConnectMotorSignalsInLayoutEffect")()
 
 local goals = {
 	Spring = {
@@ -193,6 +196,34 @@ describe("Single value", function()
 		expect(onStepSpy1).toHaveBeenCalledTimes(1)
 		expect(onStepSpy2).toHaveBeenCalledTimes(1)
 	end)
+
+	if FFlagOtterConnectMotorSignalsInLayoutEffect then
+		it("should connect onComplete, onStep callback when goal is set in layout effect", function()
+			local completion, stepped = false, false
+			local function onComplete()
+				completion = true
+			end
+			local function onStep()
+				stepped = true
+			end
+
+			local function LayoutMotor()
+				local setGoal = useMotor(0, onStep, onComplete)
+
+				React.useLayoutEffect(function()
+					setGoal(Otter.instant(1))
+				end, {})
+
+				return nil
+			end
+
+			render(React.createElement(LayoutMotor))
+
+			Otter.__devAnimationStepSignal:Fire()
+			expect(stepped).toBe(true)
+			expect(completion).toBe(true)
+		end)
+	end
 end)
 
 describe("Multiple values", function()
