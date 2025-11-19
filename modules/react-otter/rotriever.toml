@@ -12,6 +12,7 @@ registry_index = true
 [dependencies]
 Otter = { path = "../otter" }
 React = "github.com/roblox/roact-alignment@17.0.1-rc.19"
+SafeFlags = "0.1.0"
 
 [dev_dependencies]
 ReactTestingLibrary = "github.com/roblox/react-testing-library-lua@12.2.3"
